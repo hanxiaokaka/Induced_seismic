@@ -1,7 +1,7 @@
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
 
-from .nodes import create_model_input_table, preprocess_companies, preprocess_shuttles, save_csv_func
+from .dummy_nodes import create_model_input_table, preprocess_companies, preprocess_shuttles, save_csv_func
 
 
 def create_pipeline(**kwargs) -> Pipeline:
