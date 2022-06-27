@@ -16,9 +16,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
     """
     data_processing_pipeline = dp.create_pipeline()
     data_science_pipeline = ds.create_pipeline()
+    data_processing_pipeline_test = dp.create_pipeline_test()
 
     return {
         "__default__": data_processing_pipeline + data_science_pipeline,
         "dp": data_processing_pipeline,
         "ds": data_science_pipeline,
+        "dp_test": data_processing_pipeline_test,
     }

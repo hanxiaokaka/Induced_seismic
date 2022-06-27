@@ -1,7 +1,7 @@
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
 
-from .nodes import create_model_input_table, preprocess_companies, preprocess_shuttles
+from .nodes import create_model_input_table, preprocess_companies, preprocess_shuttles, save_csv_func
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -30,3 +30,14 @@ def create_pipeline(**kwargs) -> Pipeline:
         inputs=["companies", "shuttles", "reviews"],
         outputs="model_input_table",
     )
+
+def create_pipeline_test(**kwargs) -> Pipeline:
+    return pipeline(
+        [
+            node(
+                func=save_csv_func,
+                inputs=[], #"companies",
+                outputs="test_csv",
+                name="preprocess_companies_node",
+            )
+        ])

@@ -65,3 +65,15 @@ def create_model_input_table(
     )
     model_input_table = model_input_table.dropna()
     return model_input_table
+
+def save_csv_func() -> pd.DataFrame:
+    """Save a random csv
+
+    Args:
+        None
+    Returns:
+        A dummy csv file
+    """
+
+    data = pd.DataFrame({'col1': [1,2], 'col2': [4,5]})
+    return data

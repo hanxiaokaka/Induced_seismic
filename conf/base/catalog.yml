@@ -39,6 +39,23 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 
+test_csv:
+  type: pandas.CSVDataSet
+  filepath: gs://us-geomechanicsforco2-landing/data_sources/cushing_oklahoma/test.csv #test.csv
+  fs_args:
+    project: us-geomechanicsforco2
+  #credentials: gcp_credentials
+  # more about layers in the Data Engineering Convention:
+  # https://kedro.readthedocs.io/en/stable/tutorial/visualise_pipeline.html#interact-with-data-engineering-convention
+  layer: raw
+
+test_csv_1:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/test.csv #test.csv
+  # more about layers in the Data Engineering Convention:
+  # https://kedro.readthedocs.io/en/stable/tutorial/visualise_pipeline.html#interact-with-data-engineering-convention
+  layer: raw
+
 companies:
   type: pandas.CSVDataSet
   filepath: data/01_raw/companies.csv
