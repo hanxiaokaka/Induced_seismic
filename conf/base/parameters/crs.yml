@@ -1,4 +1,4 @@
-data_science:
+crs:
   active_modelling_pipeline:
     model_options:
       test_size: 0.2

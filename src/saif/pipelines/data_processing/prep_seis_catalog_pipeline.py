@@ -3,7 +3,7 @@ from kedro.pipeline.modular_pipeline import pipeline
 
 from .prep_seis_catalog_nodes import *
 
-def create_pipeline(**kwargs) -> Pipeline:
+def create_catalog_creation_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(

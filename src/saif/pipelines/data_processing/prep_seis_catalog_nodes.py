@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from fecs.utils.seismic_catalog import SeismicCatalog
+from saif.utils.seismic_catalog import SeismicCatalog
 
 def create_seismic_catalog() -> pd.DataFrame:
     """Save a random csv

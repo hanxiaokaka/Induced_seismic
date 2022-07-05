@@ -74,6 +74,8 @@ class SeismicCatalog():
         self.magnitude_rate = []
         self.magnitude_rate_time = []
 
+        self.other_data = {}
+
     def set_log_level(self, log_level):
         if (log_level == 'debug'):
             self.logger.setLevel(logging.DEBUG)
@@ -123,8 +125,36 @@ class SeismicCatalog():
         else:
             self.utm_zone = ''
 
+        self.other_data = {}
+        targets = ['magnitude', 'depth', 'longitude', 'latitude', 'easting', 'northing', 'utm_zone']
+        for k in data.keys():
+            if k not in targets:
+                self.other_data[k] = data[k]
+
         self.convert_coordinates()
         self.reset_slice()
+
+    def load_catalog_array(self, **xargs):
+        """
+        Initialize catalog from pre-loaded arrays.
+        Required arguments include: epoch, magnitude, depth
+        Location entries can include one of the following:
+            - latitude, longitude
+            - easting, northing (local coordinates)
+            - easting, northing, utm_zone
+        Additional arguments will be placed in the other_data dict
+
+        Args:
+            epoch (np.ndarray): 1D array of event time in epoch
+            depth (np.ndarray): 1D array of event depths
+            magnitude (np.ndarray): 1D array of event magnitudes
+            longitude (np.ndarray): 1D array of event longitudes
+            latitude (np.ndarray): 1D array of event latitudes
+            easting (np.ndarray): 1D array of event eastings
+            northing (np.ndarray): 1D array of event northings
+            utm_zone (str): UTM zone string (e.g.: '4SU')
+        """
+        self.setup_model(xargs)
 
     """
     def load_catalog_hdf5(self, filename):
@@ -176,7 +206,7 @@ class SeismicCatalog():
         Returns:
             dict: A dictionary of catalog data
         """
-        data = {}
+        data = self.other_data.copy()
         data['epoch'] = self.get_epoch_slice()
         data['magnitude'] = self.get_magnitude_slice()
         data['depth'] = self.get_depth_slice()
@@ -231,6 +261,24 @@ class SeismicCatalog():
             del catalog['utm_zone']
         header_keys = sorted(catalog.keys())
         header += ','.join(header_keys)
+
+        # Split any tensor data
+        initial_catalog_keys = list(catalog.keys())
+        for k in initial_catalog_keys:
+            if isinstance(catalog[k], np.ndarray):
+                M = np.shape(catalog[k])
+                if (len(M) > 1):
+                    tmp = np.reshape(catalog[k], (M[0], -1))
+                    for ii in range(np.shape(tmp)[1]):
+                        catalog['%s_%i' % (k, ii)] = np.squeeze(tmp[:, ii])
+                    del catalog[k]
+
+        # Assemble the data, padding where necessary to keep a consistent length
+        N = max([len(catalog[k]) for k in catalog.keys()])
+        for k in catalog.keys():
+            M = len(catalog[k])
+            if (M < N):
+                catalog[k] = np.resize(catalog[k], N)
 
         # Save the data
         data = np.concatenate([np.expand_dims(catalog[k], -1) for k in header_keys], axis=1)

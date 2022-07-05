@@ -40,5 +40,5 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         pipe=ds_pipeline_1 + ds_pipeline_2,
         inputs="model_input_table",
-        namespace="data_science",
+        namespace="crs",
     )
