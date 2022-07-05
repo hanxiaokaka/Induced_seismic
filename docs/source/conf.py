@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-# fecs documentation build
+# saif documentation build
 # configuration file, created by sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its
@@ -26,7 +26,7 @@ from fecs import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
-project = "fecs"
+project = "saif"
 author = "Kedro"
 
 # The short X.Y version.
@@ -151,8 +151,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "fecs.tex",
-        "fecs Documentation",
+        "saif.tex",
+        "saif Documentation",
         "Kedro",
         "manual",
     )
@@ -165,8 +165,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "fecs",
-        "fecs Documentation",
+        "saif",
+        "saif Documentation",
         [author],
         1,
     )
@@ -180,11 +180,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "fecs",
-        "fecs Documentation",
+        "saif",
+        "saif Documentation",
         author,
-        "fecs",
-        "Project fecs codebase.",
+        "saif",
+        "Project saif codebase.",
         "Data-Science",
     )
 ]

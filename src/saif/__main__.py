@@ -1,5 +1,5 @@
 """Forecasting Earthquakes for CO2 Sequestration file for ensuring the package is executable
-as `fecs` and `python -m fecs`
+as `saif` and `python -m saif`
 """
 import importlib
 from pathlib import Path
