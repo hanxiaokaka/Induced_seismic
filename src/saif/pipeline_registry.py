@@ -14,7 +14,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
 
     """
-    prep_seis_catalog = prep_seis_catalog_pipeline.create_catalog_download_pipeline()
+    prep_seis_catalog = prep_seis_catalog_pipeline.create_catalog_load_pipeline()
     prep_pressure_table = prep_pressure_table_pipeline.create_pressure_load_pipeline()
 
     return {
