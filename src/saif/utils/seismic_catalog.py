@@ -101,9 +101,12 @@ class SeismicCatalog():
         Args:
             data (dict): catalog dictionary
         """
-        self.epoch = data['epoch']
-        self.magnitude = data['magnitude']
-        self.depth = data['depth']
+        # Sort values by epoch
+        Ia = np.argsort(data['epoch'])
+
+        self.epoch = data['epoch'][Ia]
+        self.magnitude = data['magnitude'][Ia]
+        self.depth = data['depth'][Ia]
         self.N = len(self.epoch)
 
         # Load location information
@@ -113,12 +116,12 @@ class SeismicCatalog():
         self.northing = np.zeros(0)
 
         if ('longitude' in data.keys()):
-            self.longitude = data['longitude']
-            self.latitude = data['latitude']
+            self.longitude = data['longitude'][Ia]
+            self.latitude = data['latitude'][Ia]
 
         if ('easting' in data.keys()):
-            self.easting = data['easting']
-            self.northing = data['northing']
+            self.easting = data['easting'][Ia]
+            self.northing = data['northing'][Ia]
 
         if ('utm_zone' in data.keys()):
             self.utm_zone = data['utm_zone']
@@ -129,7 +132,11 @@ class SeismicCatalog():
         targets = ['magnitude', 'depth', 'longitude', 'latitude', 'easting', 'northing', 'utm_zone']
         for k in data.keys():
             if k not in targets:
-                self.other_data[k] = data[k]
+                if (len(data[k]) == self.N):
+                    self.other_data[k] = data[k][Ia]
+                else:
+                    # If lengths differ, do not sort
+                    self.other_data[k] = data[k]
 
         self.convert_coordinates()
         self.reset_slice()
@@ -154,7 +161,7 @@ class SeismicCatalog():
             northing (np.ndarray): 1D array of event northings
             utm_zone (str): UTM zone string (e.g.: '4SU')
         """
-        self.setup_model(xargs)
+        self.load_catalog_dict(xargs)
 
     """
     def load_catalog_hdf5(self, filename):
@@ -730,7 +737,6 @@ def gutenberg_richter_a_b(magnitude, bins, dt, min_points=10):
         hist = np.histogram(magnitude, bins)
         magnitude_exceedance = np.cumsum(hist[0][::-1])[::-1] / dt
         Ia = np.where(magnitude_exceedance > 0)
-
         tmp = np.polyfit(bin_centers[Ia],
                          np.log10(magnitude_exceedance[Ia]),
                          1)

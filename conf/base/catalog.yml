@@ -41,7 +41,7 @@
 
 seismic_catalog_data:
   type: pandas.CSVDataSet
-  filepath: gs://us-geomechanicsforco2-landing/data_sources/decatur_illinois/dacaturSeismic.csv #test.csv
+  filepath: gs://us-geomechanicsforco2-landing/data_sources/cushing_oklahoma/dacaturSeismic.csv #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials
@@ -51,7 +51,7 @@ seismic_catalog_data:
 
 seismic_catalog:
   type: pickle.PickleDataSet
-  filepath: gs://us-geomechanicsforco2-dev-staging/data_sources/decatur_illinois/seismic_catalog.pickle #test.csv
+  filepath: gs://us-geomechanicsforco2-dev-staging/data_sources/cushing_oklahoma/seismic_catalog.pickle #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials
@@ -61,7 +61,7 @@ seismic_catalog:
 
 pressure_table_data:
   type: pandas.CSVDataSet
-  filepath: gs://us-geomechanicsforco2-landing/data_sources/decatur_illinois/decaturInjection.csv #test.csv
+  filepath: gs://us-geomechanicsforco2-landing/data_sources/cushing_oklahoma/decaturInjection.csv #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials
@@ -71,7 +71,7 @@ pressure_table_data:
 
 pressure_table:
   type: pickle.PickleDataSet
-  filepath: gs://us-geomechanicsforco2-dev-staging/data_sources/decatur_illinois/pressure_table.pickle #test.csv
+  filepath: gs://us-geomechanicsforco2-dev-staging/data_sources/cushing_oklahoma/pressure_table.pickle #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials
@@ -81,7 +81,7 @@ pressure_table:
 
 forecast_crs:
   type: pandas.CSVDataSet
-  filepath: gs://us-geomechanicsforco2-dev-models/data_sources/decatur_illinois/forecast_crs.csv #test.csv
+  filepath: gs://us-geomechanicsforco2-dev-models/data_sources/cushing_oklahoma/forecast_crs.csv #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials
@@ -105,47 +105,3 @@ test_csv_1:
   # more about layers in the Data Engineering Convention:
   # https://kedro.readthedocs.io/en/stable/tutorial/visualise_pipeline.html#interact-with-data-engineering-convention
   layer: raw
-
-companies:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/companies.csv
-  # more about layers in the Data Engineering Convention:
-  # https://kedro.readthedocs.io/en/stable/tutorial/visualise_pipeline.html#interact-with-data-engineering-convention
-  layer: raw
-
-reviews:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/reviews.csv
-  layer: raw
-
-shuttles:
-  type: pandas.ExcelDataSet
-  filepath: data/01_raw/shuttles.xlsx
-  layer: raw
-
-data_processing.preprocessed_companies:
-  type: pandas.ParquetDataSet
-  filepath: data/02_intermediate/preprocessed_companies.pq
-  layer: intermediate
-
-data_processing.preprocessed_shuttles:
-  type: pandas.ParquetDataSet
-  filepath: data/02_intermediate/preprocessed_shuttles.pq
-  layer: intermediate
-
-model_input_table:
-  type: pandas.ParquetDataSet
-  filepath: data/03_primary/model_input_table.pq
-  layer: primary
-
-data_science.active_modelling_pipeline.regressor:
-  type: pickle.PickleDataSet
-  filepath: data/06_models/regressor_active.pickle
-  versioned: true
-  layer: models
-
-data_science.candidate_modelling_pipeline.regressor:
-  type: pickle.PickleDataSet
-  filepath: data/06_models/regressor_candidate.pickle
-  versioned: true
-  layer: models

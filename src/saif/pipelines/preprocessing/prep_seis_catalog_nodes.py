@@ -33,7 +33,12 @@ def load_seismic_catalog(catalog_data: pd.DataFrame) -> SeismicCatalog:
     data = {columnName: columnData  for (columnName, columnData) in catalog_data.iteritems() }
 
     catalog = SeismicCatalog()
-    catalog.load_catalog_array(**data)
+    #catalog.load_catalog_array(**data)
+    catalog.load_catalog_array(epoch=data["epoch"],
+                               depth=data["depth"],
+                               easting=data["easting"],
+                               northing=data["northing"],
+                               magnitude=data["magnitude"])
 
     return catalog
 
