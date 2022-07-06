@@ -8,7 +8,7 @@ def create_pressure_load_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=load_pressure_table,
-                inputs="pressure_table_data",
+                inputs=["pressure_table_data_t", "pressure_table_data_dpdt"] ,
                 outputs="pressure_table",
                 tags=["preprocessing"]
             ),
