@@ -24,7 +24,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     forecast_crs_orion = crs_orion_pipeline.create_crs_pipeline()
 
     return {
-        "__default__": prep_seis_catalog + prep_pressure_table + forecast_crs,
+        "__default__": prep_seis_catalog + prep_pressure_table + forecast_crs_orion,
         "prep_seis_catalog": prep_seis_catalog,
         "prep_pressure_table": prep_pressure_table,
         "forecast_crs_orion": forecast_crs_orion,
