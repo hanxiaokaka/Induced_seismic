@@ -13,7 +13,7 @@ def create_catalog_download_pipeline(**kwargs) -> Pipeline:
                 #name="create_seismic_catalog",
             ),
         ],
-        namespace="data_processing",
+        namespace="preprocessing",
     )
 
 def create_catalog_load_pipeline(**kwargs) -> Pipeline:
@@ -25,5 +25,5 @@ def create_catalog_load_pipeline(**kwargs) -> Pipeline:
                 outputs="seismic_catalog",
             ),
         ],
-        namespace="data_processing",
+        namespace="preprocessing",
     )

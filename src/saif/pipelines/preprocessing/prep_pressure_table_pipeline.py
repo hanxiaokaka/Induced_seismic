@@ -12,5 +12,5 @@ def create_pressure_load_pipeline(**kwargs) -> Pipeline:
                 outputs="pressure_table",
             ),
         ],
-        namespace="data_processing",
+        namespace="preprocessing",
     )
