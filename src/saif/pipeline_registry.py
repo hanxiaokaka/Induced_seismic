@@ -3,9 +3,13 @@ from typing import Dict
 
 from kedro.pipeline import Pipeline
 
-from saif.pipelines.preprocessing import prep_seis_catalog_pipeline, prep_pressure_table_pipeline
+from saif.pipelines.preprocessing import (
+    prep_seis_catalog_pipeline,
+    prep_pressure_table_pipeline,
+)
 
 from saif.pipelines.models import crs_pipeline
+
 
 def register_pipelines() -> Dict[str, Pipeline]:
     """Register the project's pipelines.

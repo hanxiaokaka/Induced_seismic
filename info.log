@@ -1,0 +1,51 @@
+2022-07-06 15:30:33,813 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 15:35:14,919 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 15:35:15,274 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 15:36:37,981 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 15:36:38,342 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 15:40:38,876 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 15:40:39,223 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 15:42:17,746 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 15:42:18,094 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 16:15:46,417 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 16:15:46,770 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 16:25:27,426 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 16:25:27,774 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 17:11:15,356 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 17:11:15,704 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 17:11:38,095 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 17:11:38,445 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 17:12:17,597 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 17:12:17,941 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 17:26:36,655 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 17:26:37,002 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 20:26:20,931 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 20:26:21,279 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 20:54:59,555 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 20:54:59,901 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:00:33,221 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:00:33,571 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:02:00,971 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:02:01,424 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:02:36,421 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:02:36,770 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:06:53,159 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:06:53,505 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:07:20,024 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:07:20,372 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:07:49,294 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:07:49,644 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:09:32,732 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:09:33,082 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:09:44,407 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:09:44,759 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:15:47,916 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:15:48,263 - kedro.framework.session.store - INFO - `read()` not implemented for `BaseSessionStore`. Assuming empty store.
+2022-07-06 21:16:13,355 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:16:53,829 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-07-06 21:16:57,404 - blib2to3.pgen2.driver - INFO - Generating grammar tables from /home/jupyter/.local/lib/python3.8/site-packages/blib2to3/Grammar.txt
+2022-07-06 21:16:57,497 - blib2to3.pgen2.driver - INFO - Writing grammar tables to /home/jupyter/.cache/black/22.6.0/Grammar3.8.13.final.0.pickle
+2022-07-06 21:16:57,498 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: '/home/jupyter/.cache/black/22.6.0/tmpzbi4t4qy'
+2022-07-06 21:16:57,499 - blib2to3.pgen2.driver - INFO - Generating grammar tables from /home/jupyter/.local/lib/python3.8/site-packages/blib2to3/PatternGrammar.txt
+2022-07-06 21:16:57,500 - blib2to3.pgen2.driver - INFO - Writing grammar tables to /home/jupyter/.cache/black/22.6.0/PatternGrammar3.8.13.final.0.pickle
+2022-07-06 21:16:57,500 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: '/home/jupyter/.cache/black/22.6.0/tmpfj9kb2bv'

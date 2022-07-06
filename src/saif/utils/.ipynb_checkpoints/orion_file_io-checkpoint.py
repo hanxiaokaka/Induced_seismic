@@ -196,11 +196,14 @@ def check_table_shape(data, axes_names=["x", "y", "z", "t"]):
         data: Dictionary of table entries
         axes_names: List of potential axes names
     """
+    print("data ", type(data), data.keys())
+    print(data)
     pnames = [k for k in data.keys() if k not in axes_names]
 
     # Check to see if the data needs to be reshaped
     structured_shape = tuple([len(data[k]) for k in axes_names if k in data])
-    # structured_shape = tuple([data[k].size for k in axes_names if k in data])
+    print("structured_shape ", structured_shape)
+    print("pnames ", pnames)
     for k in pnames:
         if data[k].size != structured_shape[0]:
             data[k] = np.reshape(data[k], structured_shape, order="F")

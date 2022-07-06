@@ -1,10 +1,11 @@
 import numpy as np
-#from orion_light import file_io
+
+# from orion_light import file_io
 from saif.utils import orion_file_io
 from scipy import integrate
 
 
-class PressureTableModel():
+class PressureTableModel:
     """
     Pressure model based off of Theis Solution
 
@@ -81,24 +82,32 @@ class PressureTableModel():
         orion_file_io.check_table_shape(self.table_data)
 
         # Check to see whether we need to calculate pressure or dpdt
-        if ('t' not in self.table_data):
-            raise Exception('The pressure table file is missing t')
-        if ('pressure' not in self.table_data):
-            if ('dpdt' in self.table_data):
-                self.table_data['pressure'] = integrate.cumtrapz(self.table_data['dpdt'], self.table_data['t'], initial=0.0, axis=-1)
+        if "t" not in self.table_data:
+            raise Exception("The pressure table file is missing t")
+        if "pressure" not in self.table_data:
+            if "dpdt" in self.table_data:
+                self.table_data["pressure"] = integrate.cumtrapz(
+                    self.table_data["dpdt"], self.table_data["t"], initial=0.0, axis=-1
+                )
             else:
-                raise Exception('The pressure table file requires either pressure or dpdt')
-        if ('dpdt' not in self.table_data):
-            if ('pressure' in self.table_data):
-                scale_shape = np.ones(len(np.shape(self.table_data['pressure'])), dtype=int)
+                raise Exception(
+                    "The pressure table file requires either pressure or dpdt"
+                )
+        if "dpdt" not in self.table_data:
+            if "pressure" in self.table_data:
+                scale_shape = np.ones(
+                    len(np.shape(self.table_data["pressure"])), dtype=int
+                )
                 scale_shape[-1] = -1
-                dt = np.reshape(np.diff(self.table_data['t']), scale_shape)
-                dpdt = np.diff(self.table_data['pressure'], axis=-1) / dt
-                self.table_data['dpdt'] = np.concatenate([dpdt[..., :1], dpdt], axis=-1)
+                dt = np.reshape(np.diff(self.table_data["t"]), scale_shape)
+                dpdt = np.diff(self.table_data["pressure"], axis=-1) / dt
+                self.table_data["dpdt"] = np.concatenate([dpdt[..., :1], dpdt], axis=-1)
             else:
-                raise Exception('The pressure table file requires either pressure or dpdt')
+                raise Exception(
+                    "The pressure table file requires either pressure or dpdt"
+                )
 
         # Build interpolators
         interps = orion_file_io.convert_tables_to_interpolators(self.table_data)
-        self.p_interp = interps['pressure']
-        self.dpdt_interp = interps['dpdt']
+        self.p_interp = interps["pressure"]
+        self.dpdt_interp = interps["dpdt"]

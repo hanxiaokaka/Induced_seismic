@@ -2,7 +2,7 @@ import numpy as np
 from scipy.special import exp1
 
 
-class RadialFlowModel():
+class RadialFlowModel:
     """
     Pressure model based off of Theis Solution
 
@@ -52,7 +52,10 @@ class RadialFlowModel():
             float: pressure or dpdt components at the target point(s)
         """
         dt = np.maximum(t + self.t_origin - self.wells_t[well_id], 1.0)
-        r = np.sqrt((x - self.wells_xyz[well_id, 0])**2 + (y - self.wells_xyz[well_id, 1])**2)
+        r = np.sqrt(
+            (x - self.wells_xyz[well_id, 0]) ** 2
+            + (y - self.wells_xyz[well_id, 1]) ** 2
+        )
 
         unit_scale = 1e-13  # cP/mD
         K = unit_scale * self.permeability * 1000.0 * 9.81 / self.viscosity
@@ -127,10 +130,10 @@ class RadialFlowModel():
         # Count the number of required well terms
         N = 0
         for well in wells:
-            if isinstance(well['t'], float):
+            if isinstance(well["t"], float):
                 N += 1
             else:
-                N += len(well['t'])
+                N += len(well["t"])
 
         self.wells_xyz = np.zeros((N, 3))
         self.wells_t = np.zeros(N)
@@ -139,23 +142,22 @@ class RadialFlowModel():
         # Setup the well terms
         ii = 0
         for well in wells:
-            if isinstance(well['t'], float):
-                self.wells_xyz[ii, 0] = well['x']
-                self.wells_xyz[ii, 1] = well['y']
-                self.wells_xyz[ii, 2] = well['z']
-                self.wells_t[ii] = well['t']
-                self.wells_q[ii] = well['q']
+            if isinstance(well["t"], float):
+                self.wells_xyz[ii, 0] = well["x"]
+                self.wells_xyz[ii, 1] = well["y"]
+                self.wells_xyz[ii, 2] = well["z"]
+                self.wells_t[ii] = well["t"]
+                self.wells_q[ii] = well["q"]
                 ii += 1
             else:
-                M = len(well['t'])
-                self.wells_xyz[ii:ii+M, 0] = well['x']
-                self.wells_xyz[ii:ii+M, 1] = well['y']
-                self.wells_xyz[ii:ii+M, 2] = well['z']
-                self.wells_t[ii] = well['t'][0]
-                self.wells_q[ii] = well['q'][0]
+                M = len(well["t"])
+                self.wells_xyz[ii : ii + M, 0] = well["x"]
+                self.wells_xyz[ii : ii + M, 1] = well["y"]
+                self.wells_xyz[ii : ii + M, 2] = well["z"]
+                self.wells_t[ii] = well["t"][0]
+                self.wells_q[ii] = well["q"][0]
                 ii += 1
                 for jj in range(1, M):
-                    self.wells_t[ii] = well['t'][jj]
-                    self.wells_q[ii] = well['q'][jj] - well['q'][jj - 1]
+                    self.wells_t[ii] = well["t"][jj]
+                    self.wells_q[ii] = well["q"][jj] - well["q"][jj - 1]
                     ii += 1
-

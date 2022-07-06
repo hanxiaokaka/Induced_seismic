@@ -1,0 +1,185 @@
+2022-07-06 15:35:15,406 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 15:35:16,862 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 15:36:38,478 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 15:36:39,782 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 15:40:39,355 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 15:40:40,488 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 15:42:18,226 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 15:42:19,365 - kedro.pipeline.node - INFO - Running node: download_seismic_catalog(None) -> [seismic_catalog]
+2022-07-06 15:42:20,421 - seismic_catalog - INFO - Loading catalog from comcat
+2022-07-06 15:42:31,780 - seismic_catalog - INFO - Done!
+2022-07-06 15:42:31,804 - kedro.io.data_catalog - INFO - Saving data to `seismic_catalog` (PickleDataSet)...
+2022-07-06 15:42:32,149 - kedro.runner.sequential_runner - INFO - Completed 1 out of 2 tasks
+2022-07-06 15:42:32,149 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 15:42:32,377 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+  --from-nodes "load_pressure_table([pressure_table_data]) -> [pressure_table]"
+2022-07-06 15:42:32,382 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 16:15:46,903 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 16:15:48,045 - kedro.pipeline.node - INFO - Running node: download_seismic_catalog(None) -> [seismic_catalog]
+2022-07-06 16:15:48,612 - seismic_catalog - INFO - Loading catalog from comcat
+2022-07-06 16:15:56,047 - seismic_catalog - INFO - Done!
+2022-07-06 16:15:56,060 - kedro.io.data_catalog - INFO - Saving data to `seismic_catalog` (PickleDataSet)...
+2022-07-06 16:15:56,425 - kedro.runner.sequential_runner - INFO - Completed 1 out of 2 tasks
+2022-07-06 16:15:56,426 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 16:15:56,848 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 16:15:56,850 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+module 'orion_light.file_io' has no attribute 'check_table_shape'
+2022-07-06 16:15:56,852 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+  --from-nodes "load_pressure_table([pressure_table_data]) -> [pressure_table]"
+2022-07-06 16:15:56,855 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 16:25:27,908 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 16:25:29,040 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 16:25:29,314 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 16:25:29,314 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 16:25:29,315 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 16:25:29,316 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 17:11:15,835 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 17:11:16,962 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 17:11:17,189 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 17:11:17,190 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+'dict' object has no attribute 'shape'
+2022-07-06 17:11:17,190 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 17:11:17,191 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 17:11:38,578 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 17:11:39,705 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 17:11:39,911 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 17:11:39,915 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:11:39,916 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 17:11:39,918 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 17:12:18,071 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 17:12:19,200 - kedro.pipeline.node - INFO - Running node: download_seismic_catalog(None) -> [seismic_catalog]
+2022-07-06 17:12:19,748 - seismic_catalog - INFO - Loading catalog from comcat
+2022-07-06 17:12:26,868 - seismic_catalog - INFO - Done!
+2022-07-06 17:12:26,881 - kedro.io.data_catalog - INFO - Saving data to `seismic_catalog` (PickleDataSet)...
+2022-07-06 17:12:27,209 - kedro.runner.sequential_runner - INFO - Completed 1 out of 2 tasks
+2022-07-06 17:12:27,209 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 17:12:27,330 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 17:12:27,333 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:12:27,334 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+  --from-nodes "load_pressure_table([pressure_table_data]) -> [pressure_table]"
+2022-07-06 17:12:27,336 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 17:26:37,131 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 17:26:38,262 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 17:26:38,668 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 17:26:38,680 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:26:38,681 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 17:26:38,684 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 20:26:21,407 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 20:26:22,530 - kedro.pipeline.node - INFO - Running node: download_seismic_catalog(None) -> [seismic_catalog]
+2022-07-06 20:26:23,084 - seismic_catalog - INFO - Loading catalog from comcat
+2022-07-06 20:26:30,342 - seismic_catalog - INFO - Done!
+2022-07-06 20:26:30,355 - kedro.io.data_catalog - INFO - Saving data to `seismic_catalog` (PickleDataSet)...
+2022-07-06 20:26:30,881 - kedro.runner.sequential_runner - INFO - Completed 1 out of 2 tasks
+2022-07-06 20:26:30,881 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 20:26:31,160 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data]) -> [pressure_table]
+2022-07-06 20:26:31,164 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 20:26:31,165 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+  --from-nodes "load_pressure_table([pressure_table_data]) -> [pressure_table]"
+2022-07-06 20:26:31,166 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 20:55:00,029 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 20:55:01,149 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data` (CSVDataSet)...
+2022-07-06 20:55:01,410 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 20:55:01,411 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:00:33,706 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:00:34,845 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:00:35,543 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:00:35,573 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:00:35,575 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:00:35,579 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:02:01,614 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:02:02,759 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:02:03,155 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:02:03,208 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:02:03,210 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:02:03,213 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:02:36,905 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:02:38,040 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:02:38,398 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:02:38,442 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:02:38,443 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:02:38,444 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:06:53,634 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:06:54,786 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_t` (CSVDataSet)...
+2022-07-06 21:06:55,109 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_dpdt` (CSVDataSet)...
+2022-07-06 21:06:55,342 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]
+2022-07-06 21:06:55,342 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
+2022-07-06 21:06:55,343 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:06:55,346 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:07:20,500 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:07:21,616 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:07:22,125 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:07:22,169 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:07:22,169 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:07:22,170 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:07:49,774 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:07:50,896 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:07:51,591 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:07:51,635 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:07:51,635 - kedro.runner.sequential_runner - WARNING - There are 2 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:07:51,636 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:09:33,216 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:09:34,348 - kedro.io.data_catalog - INFO - Loading data from `seismic_catalog_data` (CSVDataSet)...
+2022-07-06 21:09:34,954 - kedro.pipeline.node - INFO - Running node: load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]
+2022-07-06 21:09:34,998 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:09:34,999 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:09:35,000 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:09:44,890 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:09:46,014 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_t` (CSVDataSet)...
+2022-07-06 21:09:46,346 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_dpdt` (CSVDataSet)...
+2022-07-06 21:09:46,581 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]
+2022-07-06 21:09:46,582 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
+2022-07-06 21:09:46,582 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:09:46,584 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.
+2022-07-06 21:15:48,387 - kedro.framework.session.session - INFO - ** Kedro project saif
+2022-07-06 21:15:49,498 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_t` (CSVDataSet)...
+2022-07-06 21:15:49,764 - kedro.io.data_catalog - INFO - Loading data from `pressure_table_data_dpdt` (CSVDataSet)...
+2022-07-06 21:15:49,906 - kedro.pipeline.node - INFO - Running node: load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]
+2022-07-06 21:15:49,907 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
+2022-07-06 21:15:49,908 - kedro.runner.sequential_runner - WARNING - There are 1 nodes that have not run.
+You can resume the pipeline run by adding the following argument to your previous command:
+
+2022-07-06 21:15:49,909 - kedro.framework.session.store - INFO - `save()` not implemented for `BaseSessionStore`. Skipping the step.

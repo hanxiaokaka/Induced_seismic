@@ -1,0 +1,32 @@
+2022-07-06 16:15:56,850 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+module 'orion_light.file_io' has no attribute 'check_table_shape'
+2022-07-06 16:25:29,314 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:11:17,190 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+'dict' object has no attribute 'shape'
+2022-07-06 17:11:39,915 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:12:27,333 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 17:26:38,680 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 20:26:31,164 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data]) -> [pressure_table]` failed with error: 
+tuple index out of range
+2022-07-06 21:00:35,573 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:02:03,208 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:02:38,442 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:06:55,342 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
+2022-07-06 21:07:22,169 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:07:51,635 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:09:34,998 - kedro.pipeline.node - ERROR - Node `load_seismic_catalog([seismic_catalog_data]) -> [seismic_catalog]` failed with error: 
+expected non-empty vector for x
+2022-07-06 21:09:46,582 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
+2022-07-06 21:15:49,907 - kedro.pipeline.node - ERROR - Node `load_pressure_table([pressure_table_data_t,pressure_table_data_dpdt]) -> [pressure_table]` failed with error: 
+The points in dimension 0 must be 1-dimensional
