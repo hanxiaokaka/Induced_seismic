@@ -33,7 +33,7 @@ def load_seismic_catalog(catalog_data: pd.DataFrame) -> SeismicCatalog:
 
     # data = {k: np.loadtxt(os.path.join(table_dir, '%s.csv' % (k))) for k in ['x', 'y', 'z', 't', 'pressure']}
     data = {
-        columnName: columnData for (columnName, columnData) in catalog_data.iteritems()
+        columnName: columnData.to_numpy().squeeze() for (columnName, columnData) in catalog_data.iteritems()
     }
 
     print("data ", data.keys())
