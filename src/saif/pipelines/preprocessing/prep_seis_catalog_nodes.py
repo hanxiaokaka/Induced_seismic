@@ -29,14 +29,12 @@ def load_seismic_catalog(catalog_data: pd.DataFrame) -> SeismicCatalog:
     Returns:
         A catalog instance
     """
-    print("catalog_data ", catalog_data)
 
     # data = {k: np.loadtxt(os.path.join(table_dir, '%s.csv' % (k))) for k in ['x', 'y', 'z', 't', 'pressure']}
     data = {
         columnName: columnData.to_numpy().squeeze() for (columnName, columnData) in catalog_data.iteritems()
     }
 
-    print("data ", data.keys())
     catalog = SeismicCatalog()
     # catalog.load_catalog_array(**data)
     catalog.load_catalog_array(

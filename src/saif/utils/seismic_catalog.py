@@ -106,8 +106,6 @@ class SeismicCatalog:
         """
         # Sort values by epoch
         Ia = np.argsort(data["epoch"])
-        print("\n\n before Ia \n\n")
-        print("Ia ", Ia)
 
         self.epoch = data["epoch"][Ia]
         self.magnitude = data["magnitude"][Ia]
