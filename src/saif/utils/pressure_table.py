@@ -1,5 +1,6 @@
 import numpy as np
-from orion_light import file_io
+#from orion_light import file_io
+from saif.utils import orion_file_io
 from scipy import integrate
 
 
@@ -30,8 +31,9 @@ class PressureTableModel():
     def dpdt(self, x, y, z, t):
         return self.dpdt_interp(x, y, z, t)
 
+    """
     def load_table(self, file_name):
-        """
+        ""
         Load tables and generate interpolator objects.
 
         Table files should have t, and some combination of pressure and/or dpdt defined.
@@ -40,7 +42,7 @@ class PressureTableModel():
         Args:
             file_name (str): Location of the table files (csv or hdf5)
 
-        """
+        ""
         if ('hdf5' in file_name):
             print('Loading pressure table from hdf5 file: %s' % (file_name))
             tmp = file_io.hdf5_wrapper(file_name)
@@ -52,6 +54,7 @@ class PressureTableModel():
             raise Exception('File format not recognized: %s' % (file_name))
 
         self.setup_model()
+    """
 
     def load_array(self, **xargs):
         """
@@ -75,7 +78,7 @@ class PressureTableModel():
         """
         If either of these values are missing, this function will estimate the remaining component
         """
-        file_io.check_table_shape(self.table_data)
+        orion_file_io.check_table_shape(self.table_data)
 
         # Check to see whether we need to calculate pressure or dpdt
         if ('t' not in self.table_data):
@@ -96,6 +99,6 @@ class PressureTableModel():
                 raise Exception('The pressure table file requires either pressure or dpdt')
 
         # Build interpolators
-        interps = file_io.convert_tables_to_interpolators(self.table_data)
+        interps = orion_file_io.convert_tables_to_interpolators(self.table_data)
         self.p_interp = interps['pressure']
         self.dpdt_interp = interps['dpdt']
