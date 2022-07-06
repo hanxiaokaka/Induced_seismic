@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # import time
 from saif.utils.pressure_table import PressureTableModel
