@@ -79,9 +79,9 @@ pressure_table:
   # https://kedro.readthedocs.io/en/stable/tutorial/visualise_pipeline.html#interact-with-data-engineering-convention
   layer: raw
 
-pressure_table_data:
+forecast_crs:
   type: pandas.CSVDataSet
-  filepath: gs://us-geomechanicsforco2-dev-models/data_sources/decatur_illinois/cumulative_seismic_events.csv #test.csv
+  filepath: gs://us-geomechanicsforco2-dev-models/data_sources/decatur_illinois/forecast_crs.csv #test.csv
   fs_args:
     project: us-geomechanicsforco2
   #credentials: gcp_credentials

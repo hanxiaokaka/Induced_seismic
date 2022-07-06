@@ -9,7 +9,7 @@ def create_crs_pipeline(**kwargs) -> Pipeline:
             node(
                 func=forecast_crs,
                 inputs=["pressure_table", "seismic_catalog"],
-                outputs="cumulative_seismic_events",
+                outputs="forecast_crs",
                 tags=["crs"]
             ),
         ],
