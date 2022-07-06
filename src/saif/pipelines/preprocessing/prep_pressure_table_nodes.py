@@ -18,7 +18,7 @@ def load_pressure_table(
 
     # data = {k: np.loadtxt(os.path.join(table_dir, '%s.csv' % (k))) for k in ['x', 'y', 'z', 't', 'pressure']}
     # data = {columnName: columnData  for (columnName, columnData) in pressure_data.iteritems() }
-    data = {"t": pressure_data_t, "dpdt": pressure_data_dpdt}
+    data = {"t": pressure_data_t.to_numpy().squeeze(), "dpdt": pressure_data_dpdt.to_numpy().squeeze()}
 
     flow_model = PressureTableModel()
     flow_model.load_array(**data)
