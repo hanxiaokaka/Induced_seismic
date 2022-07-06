@@ -11,9 +11,9 @@ def create_catalog_download_pipeline(**kwargs) -> Pipeline:
                 inputs=[],
                 outputs="seismic_catalog",
                 #name="create_seismic_catalog",
+                tags=["preprocessing"]
             ),
         ],
-        namespace="preprocessing",
     )
 
 def create_catalog_load_pipeline(**kwargs) -> Pipeline:
@@ -23,7 +23,7 @@ def create_catalog_load_pipeline(**kwargs) -> Pipeline:
                 func=load_seismic_catalog,
                 inputs="seismic_catalog_data",
                 outputs="seismic_catalog",
+                tags=["preprocessing"]
             ),
         ],
-        namespace="preprocessing",
     )

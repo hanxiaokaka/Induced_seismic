@@ -10,7 +10,7 @@ def create_crs_pipeline(**kwargs) -> Pipeline:
                 func=forecast_crs,
                 inputs=["pressure_table", "seismic_catalog"],
                 outputs="cumulative_seismic_events",
+                tags=["crs"]
             ),
         ],
-        namespace="crs",
     )

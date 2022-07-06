@@ -10,7 +10,7 @@ def create_pressure_load_pipeline(**kwargs) -> Pipeline:
                 func=load_pressure_table,
                 inputs="pressure_table_data",
                 outputs="pressure_table",
+                tags=["preprocessing"]
             ),
         ],
-        namespace="preprocessing",
     )
