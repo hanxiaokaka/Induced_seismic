@@ -1,5 +1,5 @@
 [tool.kedro]
-package_name = "fecs"
+package_name = "saif"
 project_name = "Forecasting Earthquakes for CO2 Sequestration"
 project_version = "0.18.1"
 
@@ -14,7 +14,7 @@ known_third_party = "kedro"
 [tool.pytest.ini_options]
 addopts = """
 --cov-report term-missing \
---cov src/fecs -ra"""
+--cov src/saif -ra"""
 
 [tool.coverage.report]
 fail_under = 0
