@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 # import time
-from saif.utils.pressure_table import PressureTableModel
-from saif.utils.seismic_catalog import SeismicCatalog
+from saif.orion_utils.pressure_table import PressureTableModel
+from saif.orion_utils.seismic_catalog import SeismicCatalog
 
 
 class CRSModel():

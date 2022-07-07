@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from saif.utils.seismic_catalog import SeismicCatalog
+from saif.orion_utils.seismic_catalog import SeismicCatalog
 
 
 def download_seismic_catalog() -> SeismicCatalog:

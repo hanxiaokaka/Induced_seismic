@@ -1,7 +1,7 @@
 import pandas as pd
 
 # import time
-from saif.utils.pressure_table import PressureTableModel
+from saif.orion_utils.pressure_table import PressureTableModel
 
 
 def load_pressure_table(
