@@ -63,10 +63,12 @@ class CRSModel(nn.Module):
         # (ie make sure R(t) aligns with s_dot(t) and not s_dot(t + 1))
         exp_term = torch.exp(s_dot * delta_t / asigma)
 
-        # TODO: predict rate?
-        # Predicting number is potentially unbounded.
-        # TODO: predict rate, but cumsum to get number?
-        # TODO: predict number directly? 
+        # TODO: Consider different signals to forecast:
+        # - predict rate? Would require pre-processing on the event
+        #   to obtain targets for rate
+        # - predict rate, but cumsum to get number? A compromise.
+        # - predict number directly? Potentially unbounded.
+        #   Large, unnormalized outputs.
         Rt = []
         R = self.R0 * torch.ones(B, 1).to(p.device)
         Rt.append(R)
