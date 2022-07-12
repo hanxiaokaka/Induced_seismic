@@ -1,0 +1,101 @@
+import torch
+import torch.nn as nn
+
+
+def _check_input(arr):
+    if arr.ndim == 1:
+        return arr[None, :]
+
+    return arr
+
+class CRSModel(nn.Module):
+    def __init__(self, site_info):
+        super().__init__()
+        #TODO:
+        #Resolve: should site_info be passed to forward?
+
+        self.tnsr = site_info['tectonic_shear_stressing_rate'] # Pa/s
+        self.tssr = site_info['tectonic_normal_stressing_rate'] # Pa/s
+
+        self.sigma = site_info['sigma'] # Pa
+        self.biot = site_info['biot'] # dimensionless
+
+        self.R0 = site_info['background_rate']
+        
+        self.N0 = self.R0 * site_info['init_delta_t']
+
+    def forward(self, params, p, dpdt, delta_t):
+        """
+        params: [nsamples, 3]
+        [mu_minus_alpha, rate_coeff, rate_factor]
+
+        The following variables are either 1D series, or a batch.
+        They will be reshaped to match the size of the params vector
+
+        p: [nbatch, nsteps]
+        dpdt: [nbatch, nsteps]
+        delta_t: [nbatch, nsteps]
+        """
+
+        p = _check_input(p)
+        dpdt = _check_input(dpdt)
+        delta_t = _check_input(delta_t)
+        
+
+        B, T = params.shape[0], p.shape[-1]
+
+        mu_minus_alpha = params[:, 0, None]
+        rate_coeff = params[:, 1, None]
+        rate_factor = params[:, 2, None]
+        eta = 1 / rate_factor
+
+        #TODO: Should we also broadcast along the site?
+
+        #TODO: does accessing the params in this way compromise their differentiability?
+        #NOte: critically, cannot use SGD this way, because we don't want to normalize ACROSS
+        #any of these dimensions
+        
+        # TODO: check when s_dot (CSR) is equal to 0
+        
+        # Coulomb stressing rate
+        s_dot = self.tssr - mu_minus_alpha * (self.tnsr - dpdt)
+        # Scaled sigma effective
+        asigma = rate_coeff * (self.sigma - self.biot * p)
+        
+
+        # TODO: check that these time-steps align 
+        # (ie make sure R(t) aligns with s_dot(t) and not s_dot(t + 1))
+        exp_term = torch.exp(s_dot * delta_t / asigma)
+        decay = torch.exp(-s_dot * delta_t / asigma)
+
+        # TODO: predict rate?
+        # Predicting number is potentially unbounded.
+        # TODO: predict rate, but cumsum to get number?
+        # TODO: predict number directly? 
+        Rt = []
+        R = self.R0 * torch.ones(B, 1).to(p.device)
+        Rt.append(R)
+        
+        Nt = []
+        N = self.N0 * torch.ones(B, 1).to(p.device)
+        Nt.append(N)
+
+        for i in range(T):
+        #for i in range(10):
+            #Rupdate = eta * R / s_dot[:, i, None]
+            #Rupdate += (1 - Rupdate) * decay[:, i, None]
+            #R = R / Rupdate
+            
+            scaled_R = eta * R / s_dot[:, i, None]
+            denom = 1 - scaled_R * (1 - exp_term[:, i, None])
+            
+            R = R * exp_term[:, i, None] / denom
+            N = asigma[:, i, None] / eta * torch.log(denom)
+
+            Rt.append(R)
+            Nt.append(N)
+            
+        Rt = torch.cat(Rt, dim=-1)
+        Nt = torch.cat(Nt, dim=-1).cumsum(dim=-1)
+
+        return Rt, Nt
