@@ -26,7 +26,7 @@ class CRSModel(nn.Module):
 
     def forward(self, params, p, dpdt, delta_t):
         """
-        params: [nsamples, 3]
+        params: [nbatch, 3]
         [mu_minus_alpha, rate_coeff, rate_factor]
 
         The following variables are either 1D series, or a batch.
@@ -49,14 +49,10 @@ class CRSModel(nn.Module):
         rate_factor = params[:, 2, None]
         eta = 1 / rate_factor
 
-        #TODO: Should we also broadcast along the site?
-
-        #TODO: does accessing the params in this way compromise their differentiability?
-        #NOte: critically, cannot use SGD this way, because we don't want to normalize ACROSS
-        #any of these dimensions
-        
+        # TODO: Should we also broadcast along the site?
         # TODO: check when s_dot (CSR) is equal to 0
-        
+
+        ## Compute the stress inputs from pressure data
         # Coulomb stressing rate
         s_dot = self.tssr - mu_minus_alpha * (self.tnsr - dpdt)
         # Scaled sigma effective
@@ -66,7 +62,6 @@ class CRSModel(nn.Module):
         # TODO: check that these time-steps align 
         # (ie make sure R(t) aligns with s_dot(t) and not s_dot(t + 1))
         exp_term = torch.exp(s_dot * delta_t / asigma)
-        decay = torch.exp(-s_dot * delta_t / asigma)
 
         # TODO: predict rate?
         # Predicting number is potentially unbounded.
@@ -81,11 +76,6 @@ class CRSModel(nn.Module):
         Nt.append(N)
 
         for i in range(T):
-        #for i in range(10):
-            #Rupdate = eta * R / s_dot[:, i, None]
-            #Rupdate += (1 - Rupdate) * decay[:, i, None]
-            #R = R / Rupdate
-            
             scaled_R = eta * R / s_dot[:, i, None]
             denom = 1 - scaled_R * (1 - exp_term[:, i, None])
             
