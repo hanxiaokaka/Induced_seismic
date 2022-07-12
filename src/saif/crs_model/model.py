@@ -32,9 +32,9 @@ class CRSModel(nn.Module):
         The following variables are either 1D series, or a batch.
         They will be reshaped to match the size of the params vector
 
-        p: [nbatch, nsteps]
-        dpdt: [nbatch, nsteps]
-        delta_t: [nbatch, nsteps]
+        p: [nbatch, nsteps] or [nsteps]
+        dpdt: [nbatch, nsteps] or [nsteps]
+        delta_t: [nbatch, nsteps] or [nsteps]
         """
 
         p = _check_input(p)
