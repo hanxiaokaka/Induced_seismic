@@ -1,4 +1,4 @@
-"""Peak detector for seismic catalog time series
+"""Peak detector for seismic catalog time series (seismic rate)
 This function is mainly used to monitor the occurrence of earthquake clusters.
 We can define the step size of detection, that is, how long to detect a peak.
 This way we can avoid the repetition of two earthquakes that occur very close in time.
