@@ -16,21 +16,21 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
     """Peak detection routine.
 
     Finds the numeric index of the peaks in the seismic catalog *seis_sr* by taking its first order difference. By using
-    *thrd* and *min_dist* parameters, it is possible to reduce the number of
+    *trshd* and *min_dist* parameters, it is possible to reduce the number of
     detected peaks. *seis_sr* must be signed.
 
     Parameters definition
     ----------
     seis_sr : ndarray (signed)
         1D seismic catalog data to search for peaks.
-    thrd : float between [0., 1.]
+    trshd : float between [0., 1.]
         Normalized threshold. Only the peaks with amplitude higher than the
         threshold will be detected.
     min_dist : int
         Minimum distance between each detected peak. The peak with the highest
         amplitude is preferred to satisfy this constraint.
-    thrd_abs: boolean
-        If True, the thres value will be interpreted as an absolute value, instead of
+    trshd_abs: boolean
+        If True, the trshd value will be interpreted as an absolute value, instead of
         a normalized threshold.
     Returns: ndarray
         Array containing the numeric indexes of the peaks that were detected.
