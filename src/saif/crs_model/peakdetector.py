@@ -36,7 +36,7 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
         Array containing the numeric indexes of the peaks that were detected.
     """
     if isinstance(seis_sr, np.ndarray) and np.issubdtype(seis_sr.dtype, np.unsignedinteger):
-        raise ValueError("y must be signed")
+        raise ValueError("seis_sr must be signed")
 
     if not trshd_abs:
         trshd = trshd * (np.max(seis_sr) - np.min(seis_sr)) + np.min(seis_sr)
