@@ -43,7 +43,7 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
 
     min_dist = int(min_dist)
 
-    # compute first order difference
+    # compute first order difference for time series
     ds_s = np.diff(seis_sr)
 
     # propagate left and right values successively to fill all plateau pixels (0-value)
@@ -54,24 +54,24 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
         return np.array([])
 
     if len(zeros):
-        # compute first order difference of zero indexes
+        # compute first order difference of zero indexes or second order difference for catalog time series
         zeros_diff = np.diff(zeros)
-        # check when zeros are not chained together
+        # check when zeros are not chained together (Where are no plateaus)
         zeros_diff_not_one, = np.add(np.where(zeros_diff != 1), 1)
-        # make an array of the chained zero indexes
+        # make an array of the chained zero indexes, to separate each plateau
         zero_plateaus = np.split(zeros, zeros_diff_not_one)
 
-        # fix if leftmost value in dy is zero
+        # fix if leftmost value in dy is zero, for the instance when the leftmost has a plateau
         if zero_plateaus[0][0] == 0:
             ds_s[zero_plateaus[0]] = ds_s[zero_plateaus[0][-1] + 1]
             zero_plateaus.pop(0)
 
-        # fix if rightmost value of dy is zero
+        # fix if rightmost value of dy is zero, for the instance when the leftmost has a plateau
         if len(zero_plateaus) and zero_plateaus[-1][-1] == len(ds_s) - 1:
             ds_s[zero_plateaus[-1]] = ds_s[zero_plateaus[-1][0] - 1]
             zero_plateaus.pop(-1)
 
-        # for each chain of zero indexes
+        # for each chain of zero indexes, for the instance when the plateau is in the middle
         for plateau in zero_plateaus:
             median = np.median(plateau)
             # set leftmost values to leftmost non zero values
@@ -85,7 +85,7 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
         & (np.hstack([0.0, ds_s]) > 0.0)
         & (np.greater(seis_sr, trshd))
     )[0]
-    # handle multiple peaks, respecting the minimum distance
+    # handle multiple peaks, respecting the minimum step distance
     if peaks.size > 1 and min_dist > 1:
         highest = peaks[np.argsort(seis_sr[peaks])][::-1]
         rem = np.ones(seis_sr.size, dtype=bool)
