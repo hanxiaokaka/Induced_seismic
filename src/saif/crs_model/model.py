@@ -14,8 +14,8 @@ class CRSModel(nn.Module):
         #TODO:
         #Resolve: should site_info be passed to forward?
 
-        self.tnsr = site_info['tectonic_shear_stressing_rate'] # Pa/s
-        self.tssr = site_info['tectonic_normal_stressing_rate'] # Pa/s
+        self.tssr = site_info['tectonic_shear_stressing_rate'] # Pa/s
+        self.tnsr = site_info['tectonic_normal_stressing_rate'] # Pa/s
 
         self.sigma = site_info['sigma'] # Pa
         self.biot = site_info['biot'] # dimensionless

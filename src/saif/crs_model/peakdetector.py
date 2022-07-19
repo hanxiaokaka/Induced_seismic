@@ -12,7 +12,7 @@ that is, the high plateau period is only counted as one peak.
 import numpy as np
 
 
-def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
+def pk_indxs(seis_sr, trshd=0.1, min_dist=1, trshd_abs=False):
     """Peak detection routine.
 
     Finds the numeric index of the peaks in the seismic catalog *seis_sr* by taking its first order difference. By using
@@ -45,10 +45,8 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
 
     # compute first order difference for time series
     ds_s = np.diff(seis_sr)
-
     # propagate left and right values successively to fill all plateau pixels (0-value)
     zeros, = np.where(ds_s == 0)
-
     # check if the signal is totally flat
     if len(zeros) == len(seis_sr) - 1:
         return np.array([])
@@ -60,12 +58,10 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
         zeros_diff_not_one, = np.add(np.where(zeros_diff != 1), 1)
         # make an array of the chained zero indexes, to separate each plateau
         zero_plateaus = np.split(zeros, zeros_diff_not_one)
-
         # fix if leftmost value in dy is zero, for the instance when the leftmost has a plateau
         if zero_plateaus[0][0] == 0:
             ds_s[zero_plateaus[0]] = ds_s[zero_plateaus[0][-1] + 1]
             zero_plateaus.pop(0)
-
         # fix if rightmost value of dy is zero, for the instance when the leftmost has a plateau
         if len(zero_plateaus) and zero_plateaus[-1][-1] == len(ds_s) - 1:
             ds_s[zero_plateaus[-1]] = ds_s[zero_plateaus[-1][0] - 1]
@@ -78,7 +74,6 @@ def pk_indxs(seis_sr, trshd=0.3, min_dist=1, trshd_abs=False):
             ds_s[plateau[plateau < median]] = ds_s[plateau[0] - 1]
             # set rightmost and middle values to rightmost non zero values
             ds_s[plateau[plateau >= median]] = ds_s[plateau[-1] + 1]
-
     # find the peaks by using the first order difference
     peaks = np.where(
         (np.hstack([ds_s, 0.0]) < 0.0)
