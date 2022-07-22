@@ -14,8 +14,8 @@ class CRSModel(nn.Module):
         #TODO:
         #Resolve: should site_info be passed to forward?
 
-        self.tnsr = site_info['tectonic_shear_stressing_rate'] # Pa/s
-        self.tssr = site_info['tectonic_normal_stressing_rate'] # Pa/s
+        self.tssr = site_info['tectonic_shear_stressing_rate'] # Pa/s
+        self.tnsr = site_info['tectonic_normal_stressing_rate'] # Pa/s
 
         self.sigma = site_info['sigma'] # Pa
         self.biot = site_info['biot'] # dimensionless
@@ -47,8 +47,8 @@ class CRSModel(nn.Module):
         mu_minus_alpha = params[:, 0, None]
         rate_coeff = params[:, 1, None]
         rate_factor = params[:, 2, None]
+        delay_time = params[:, 3, None]
         eta = 1 / rate_factor
-
         # TODO: Should we also broadcast along the site?
         # TODO: check when s_dot (CSR) is equal to 0
 
@@ -76,11 +76,14 @@ class CRSModel(nn.Module):
         Nt = []
         N = self.N0 * torch.ones(B, 1).to(p.device)
         Nt.append(N)
-
-        for i in range(T):
+        
+        for i in range(delay_time):
+            Rt.append(self.R0)
+            Nt.append(self.R0*i)
+        
+        for i in range(delay_time,T):
             scaled_R = eta * R / s_dot[:, i, None]
             denom = 1 - scaled_R * (1 - exp_term[:, i, None])
-            
             R = R * exp_term[:, i, None] / denom
             N = asigma[:, i, None] / eta * torch.log(denom)
 
@@ -89,5 +92,5 @@ class CRSModel(nn.Module):
             
         Rt = torch.cat(Rt, dim=-1)
         Nt = torch.cat(Nt, dim=-1).cumsum(dim=-1)
-
+        print(Rt)
         return Rt, Nt
