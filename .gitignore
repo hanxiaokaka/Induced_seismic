@@ -182,3 +182,6 @@ fabric.properties
 
 # *.iml
 # modules.xml
+
+### Data files
+.csv
