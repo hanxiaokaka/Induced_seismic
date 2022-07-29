@@ -37,7 +37,7 @@ learning_rate = 1.0e-5
 # Max no. of epochs of traning
 max_epoch = 4000
 # Path to save model parameters at each epoch of training
-PARAMS_DIR = '../../data/06_models/lstm/horizon_' + str(horizon_len)
+PARAMS_DIR = '../../data/06_models/lstm/horizon_' + str(horizon_len) +'/'
 # Path to plots
 PLOT_DIR = '../../plots/lstm/'
 # Output plot formats
@@ -122,10 +122,11 @@ plot_modelpred((train_df['epoch']-train_df['epoch'].min())/(60*60*24*365.25),
 # Save loss curve data to file.
 losscurve_df = pd.DataFrame({'epoch':n_epoch, 'train_loss':train_loss, 'test_loss':test_loss})
 losscurve_df.to_csv(PARAMS_DIR+'/lstm_loss_horizon%d_seq%d.csv'% (horizon_len, seq_length),index=None)
+print('Loss curve data written to file.')
 
 # Save model predictions for best fit to file.
-pred_df = pd.DataFrame({'x_train':train_df['epoch'], 'y_train':train_df['cum_counts'], 'pred_train':prediction_train,
-                        'x_test':test_df['epoch'], 'y_test':test_df['cum_counts'], 'pred_test':prediction_test
+pred_df = pd.DataFrame({'x_test':test_df['epoch'], 'y_test':test_df['cum_counts'], 'pred_test':prediction_test
                        })
 pred_df.to_csv(PARAMS_DIR+'/lstm_pred_horizon%d_seq%d.csv'% (horizon_len, seq_length), index=None)
+print('Model predictions on test data written to file.')
 ####################################################################
