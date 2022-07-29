@@ -183,6 +183,5 @@ fabric.properties
 # *.iml
 # modules.xml
 
-# Data sets
+### Data files
 .csv
-data/

@@ -50,8 +50,8 @@ def overlap_and_interpolate(seismic, pressure):
     pressure['days'] = (pressure.epoch - t0) * ep2day
 
     dt = (t1 - t0) * ep2day
-    # bins = np.arange(0, math.ceil(dt) + 1)
-    bins = np.arange(0,math.floor(dt)+1)
+    bins = np.arange(0, math.ceil(dt) + 1)
+    # bins = np.arange(0,math.floor(dt)+1)
 
     seismic['t'] = np.digitize(
         seismic['days'], bins
@@ -60,11 +60,13 @@ def overlap_and_interpolate(seismic, pressure):
     # Interpolate pressure
     p_func = interp1d(
         pressure.days, pressure.pressure, 
-        kind='linear'
+        kind='linear',
+        fill_value= 'extrapolate'
     )
     dpdt_func = interp1d(
         pressure.days, pressure.dpdt, 
-        kind='linear'
+        kind='linear',
+        fill_value='extrapolate'
     )
 
     resampled_pressure_df = {}
@@ -84,12 +86,16 @@ def aggregate_seismic(seismic, n_steps, features, bin_name='days'):
     n_features = len(seismic_features.columns)
     
     output_vals = np.zeros((n_steps, n_features))
-    output_vals[seismic_features.index.values] = seismic_features.values
+    # output_vals[seismic_features.index.values] = seismic_features.values
+    output_vals[seismic_features.index.values-1] = seismic_features.values
+
 
     output_df = pd.DataFrame(output_vals, columns=seismic_features.columns)
 
     target_vals = np.zeros((n_steps,))
-    target_vals[seismic_counts.index.values] = seismic_counts[bin_name].values
+    # target_vals[seismic_counts.index.values] = seismic_counts[bin_name].values
+    target_vals[seismic_counts.index.values-1] = seismic_counts[bin_name].values
+
     
     return output_df, target_vals
 
@@ -165,7 +171,7 @@ def daily_seismic_and_interpolated_pressure(
     #TODO: careful, overlap and interpolate does inplace modifications!
     _features = ['depth', 'easting', 'northing', 'magnitude', 't']
     seismic, pressure, bins = overlap_and_interpolate(seismic, pressure)
-    seismic_features, target_vals = aggregate_seismic(seismic, len(bins)+1, _features, bin_name='days')
+    seismic_features, target_vals = aggregate_seismic(seismic, len(bins), _features, bin_name='days')
     target_vals = target_fn(target_vals)
 
     features = pd.concat([seismic_features, pressure], axis=1)
