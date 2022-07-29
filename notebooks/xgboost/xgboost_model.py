@@ -16,7 +16,7 @@ location = 'Decatur' # Location tag
 seismic_df = pd.read_csv('gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/seismic.csv')
 # Retain only portion of seismic data that overlaps with the pressure data.
 pressure_df = pd.read_csv('gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/pressure.csv')
-#seismic_df = seismic_df[seismic_df['epoch'] < pressure_df['epoch'].max()]
+seismic_df = seismic_df[seismic_df['epoch'] < pressure_df['epoch'].max()]
 # Define target and feature columns.
 target = 'cum_counts'
 features = ['epoch']
@@ -25,12 +25,12 @@ N_samples = 1110
 # Specify horizon length.
 horizon_length = 222
 # Hyperparameters for xgboost
-params = {'objective': 'reg:pseudohubererror', 'n_estimators': 500, 'max_depth': 4,
-          'learning_rate': 1e-2, 'subsample': 0.7}
+params = {'objective': 'reg:pseudohubererror', 'n_estimators': 40000, 'max_depth': 8,
+          'learning_rate': 1e-4, 'subsample': 0.7}
 # Path to save model parameters at each epoch of training
-PARAMS_DIR = '../../data/06_models/lstm/horizon_' + str(horizon_length)
+PARAMS_DIR = '../../data/06_models/xgboost/'
 # Path to plots
-PLOT_DIR = '../../plots/lstm/'
+PLOT_DIR = '../../plots/xgboost/'
 # Output plot formats
 plot_formats = ['.png']
 ####################################################################
@@ -40,8 +40,7 @@ if not os.path.isdir(PLOT_DIR):
     os.makedirs(PLOT_DIR)
 ####################################################################
 # PROCESSING
-features, target_vals = daily_seismic_and_interpolated_pressure(seismic_df, pressure_df)
-'''
+
 # Bin earthquake data.
 counts_df = bin_data(seismic_df, N_samples=N_samples)
 print('Earthquake data binned to time series.')
@@ -67,8 +66,10 @@ print('Data normalization completed.')
 xgbr = XGBRegressor(objective=params['objective'], n_estimators=params['n_estimators'],
                     max_depth=params['max_depth'], eta=params['learning_rate'],
                     subsample=params['subsample'])
+# Evaluation set for loss curve computation
+eval_set = [(X_train_norm, y_train_norm), (X_test_norm, y_test_norm)]
 # Fit model on training data.
-xgbr.fit(X_train_norm, y_train_norm )
+xgbr.fit(X_train_norm, y_train_norm, eval_set=eval_set, verbose=False)
 print('xgboost model fit completed.')
 
 # Inverse transformations on training data
@@ -84,6 +85,12 @@ y_test = y_scaler.inverse_transform(y_test_norm.reshape(-1,1)).squeeze()
 pred_train = y_scaler.inverse_transform(xgbr.predict(X_train_norm).reshape(-1,1)).squeeze()
 pred_test = y_scaler.inverse_transform(xgbr.predict(X_test_norm).reshape(-1,1)).squeeze()
 
+# Loss curve data
+results = xgbr.evals_result()
+boost_iter = np.arange(params['n_estimators']) + 1
+train_loss = results["validation_0"]['mphe']
+test_loss = results["validation_1"]['mphe']
+
 # Plot model prediction.
 fig = plt.figure()
 plt.plot(X_train_yr, y_train, '-k')
@@ -94,24 +101,20 @@ plt.xlabel('Time (years) since %s'% (date0.strftime('%Y - %m - %d')), fontsize=1
 plt.ylabel('Cumulative earthquake count', fontsize=14)
 plt.grid(linestyle=':', alpha=0.7)
 plt.tight_layout()
-plt.show()
-'''
+for format in plot_formats:
+    plt.savefig(PLOT_DIR + '/pred_est%d_maxdepth%d'% (params['n_estimators'], params['max_depth']) + format)
+plt.close()
 
-'''
 # Plot training deviance.
-test_score = np.zeros((params["n_estimators"],), dtype=np.float64)
-for i, y_pred in enumerate(reg.staged_predict(X_test)):
-    test_score[i] = reg.loss_(y_test, y_pred)
-
-fig = plt.figure(figsize=(6, 6))
-plt.subplot(1, 1, 1)
-plt.title("Deviance")
-plt.plot(np.arange(params["n_estimators"]) + 1, reg.train_score_, "b-",label="Training Set Deviance")
-plt.plot(np.arange(params["n_estimators"]) + 1, test_score, "r-", label="Test Set Deviance")
-plt.legend(loc="upper right")
-plt.xlabel("Boosting Iterations")
-plt.ylabel("Deviance")
-fig.tight_layout()
-plt.show()
-'''
+fig = plt.figure()
+plt.semilogy(boost_iter, train_loss, '-k',label="Training data")
+plt.semilogy(boost_iter, test_loss, '-r', label="Test data")
+plt.legend(loc='best', prop={'size':14})
+plt.xlabel('No. of boosting iterations', fontsize=14)
+plt.ylabel('Pseudohuber loss', fontsize=14)
+plt.grid(linestyle=':', alpha=0.7)
+plt.tight_layout()
+for format in plot_formats:
+    plt.savefig(PLOT_DIR + '/loss_est%d_maxdepth%d'% (params['n_estimators'], params['max_depth']) + format)
+plt.close()
 ####################################################################
