@@ -37,7 +37,7 @@ class ShallowRegLSTM(nn.Module):
         # First dimension of hn is num_layers, which is set to 1 here for regression.
         out = self.linear(hn[0]).flatten()
         # Squaring to get a positive output
-        #out = out**2
+        out = out**2
         # Enforce monotonicity.
-        #out = out.cumsum(-1)
+        out = out.cumsum(-1)
         return out

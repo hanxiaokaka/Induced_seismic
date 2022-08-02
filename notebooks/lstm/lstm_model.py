@@ -13,29 +13,31 @@ from saif.lstm.plot_utils import plot_losscurve, plot_modelpred
 ####################################################################
 # INPUTS
 
-location = 'KansasLoc1' # Location tag
-seismic_df = pd.read_csv('gs://us-geomechanicsforco2-dev-staging/temporal_datasets/kansas/loc1/seismic.csv')
+location = 'Decatur' # Location tag
+seismic_df = pd.read_csv('gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/seismic.csv')
+pressure_df = pd.read_csv('gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/pressure.csv')
+seismic_df = seismic_df[seismic_df['epoch'] < pressure_df['epoch'].max()]
 # Define target and feature columns.
 target = 'cum_counts'
 features = ['epoch']
 # No. of time samples desired across binned data.
-N_samples = 100
+N_samples = 1110
 # Specify sequence and horizon lengths.
-horizon_len = 20
-seq_length = 20
+horizon_len = 222
+seq_length = 16
 # Set batch size for training.
-batch_size = 4
+batch_size = 32
 # Number of hidden units in LSTM (preferably a power of 2)
 N_hidden = 16
 # Select loss function.
-criterion = 'MSE'
-loss_function = nn.MSELoss()
+criterion = 'Huber'
+loss_function = nn.HuberLoss()
 # Specify learning rate.
 learning_rate = 1.0e-5
 # Max no. of epochs of traning
 max_epoch = 4000
 # Path to save model parameters at each epoch of training
-PARAMS_DIR = '../../data/06_models/lstm/horizon_' + str(horizon_len)
+PARAMS_DIR = '../../data/06_models/lstm/horizon_' + str(horizon_len) +'/'
 # Path to plots
 PLOT_DIR = '../../plots/lstm/'
 # Output plot formats
@@ -117,4 +119,14 @@ plot_modelpred((train_df['epoch']-train_df['epoch'].min())/(60*60*24*365.25),
                test_df['cum_counts'], prediction_train, prediction_test,
                PLOT_DIR+location+'_pred_horizon' + str(horizon_len), plot_formats)
 
+# Save loss curve data to file.
+losscurve_df = pd.DataFrame({'epoch':n_epoch, 'train_loss':train_loss, 'test_loss':test_loss})
+losscurve_df.to_csv(PARAMS_DIR+'/lstm_loss_horizon%d_seq%d.csv'% (horizon_len, seq_length),index=None)
+print('Loss curve data written to file.')
+
+# Save model predictions for best fit to file.
+pred_df = pd.DataFrame({'x_test':test_df['epoch'], 'y_test':test_df['cum_counts'], 'pred_test':prediction_test
+                       })
+pred_df.to_csv(PARAMS_DIR+'/lstm_pred_horizon%d_seq%d.csv'% (horizon_len, seq_length), index=None)
+print('Model predictions on test data written to file.')
 ####################################################################
