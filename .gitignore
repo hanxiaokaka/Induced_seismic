@@ -184,5 +184,5 @@ fabric.properties
 # modules.xml
 
 ### Data files
-.csv
-.h5
+*.csv
+*.h5
