@@ -14,6 +14,7 @@ class ShallowRegLSTM(nn.Module):
         input_size: (int) Number of expected features in input
         hidden_size: (int) Number of features in the hidden state h
         num_layers: (int) Number of recurrent layers
+        batch_size: (int) Batch size
         dropout: (float) Dropout probability on LSTM layers excluding the final layer
         monotonic_fn: (function) Inductive bias applied on model output to enforce monotonicity
         '''
@@ -48,6 +49,6 @@ class ShallowRegLSTM(nn.Module):
         # Enforce monotonicity.
         out = self.monotonic_fn(out)
         # Force initial value of the horizon to be lower bounded by the final value of the input sequence.
-        # Assumes the last feature to be the count of seismic events.
-        # out = out.cumsum(-1) + x[:, -1, -1]
+        # Assumes the last feature to be the cumulative count of seismic events.
+        out = out.cumsum(-1) + x[:, -1, -1]
         return out
