@@ -1,5 +1,5 @@
 import torch
-
+####################################################################
 def train_model(data_loader, model, loss_function, optimizer):
     '''
     Conduct model training.
@@ -27,6 +27,7 @@ def train_model(data_loader, model, loss_function, optimizer):
     print('Training loss: %s'% (avg_loss))
     return avg_loss
 
+####################################################################
 def test_model(data_loader, model, loss_function):
     '''
     Evaluate model on test data and compute associated loss.
@@ -48,6 +49,7 @@ def test_model(data_loader, model, loss_function):
     print('Test loss: %s'% (avg_loss))
     return avg_loss
 
+####################################################################
 def predict(data_loader, model):
     '''
     Obtain model prediction on data.
@@ -64,3 +66,5 @@ def predict(data_loader, model):
             y_star = model(X)
             output = torch.cat((output, y_star), 0)
     return output
+
+####################################################################
