@@ -36,7 +36,7 @@ config = {
 # Dropout probability
 'dropout': 0.0,
 # Monotonic activation function
-'monotonic_fn': lambda x: x.abs(),
+'monotonic_fn': lambda x: x,
 # Learning rate
 'lr': 1.0e-5,
 # Loss criterion
@@ -67,7 +67,10 @@ def fit_lstm(config: dict) -> None:
         os.makedirs(config['PLOT_DIR'])
 
     features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic_df, pressure_df)
+    features['cum_counts'] = target_vals
     print('Aggregated pressure and seismic data.')
+    # Pass cumulative counts as input.
+    config['feature_names'].append('cum_counts')
 
     train_dset, test_dset, x_scaler, y_scaler = construct_dataset(features, target_vals, config['seq_length'],
                                                                   config['feature_names'], config['train_frac'],
