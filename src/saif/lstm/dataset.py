@@ -1,19 +1,27 @@
-import torch
+import torch, math
+import numpy as np
+import pandas as pd
 from torch.utils.data import Dataset
+from saif.ml_utils.normalization import normalize
+from typing import List, Tuple
+####################################################################
+class LSTMdataset(Dataset):
+    def __init__(self, feature_data: np.ndarray, target_data: np.ndarray, seq_length: int) -> None:
+        '''
+        Parameters:
+        ------------------
+        feature_data: np.ndarray
+            Feature data of shape (n_values, n_features)
 
-class SeismicDataset(Dataset):
-    def __init__(self, df, features, target, seq_length):
+        target_data: np.ndarray
+            Target data of shape (n_values, n_target)
+
+        seq_length: int
+             Sequence length
         '''
-        df: pd.DataFrame
-        features: (list of str) Feature columns in dataframe
-        target: (str) Target column in dataframe
-        seq_length: (int) Sequence length
-        '''
-        self.features = features
-        self.target = target
         self.seq_length = seq_length
-        self.X = torch.tensor(df[features].values).float()
-        self.y = torch.tensor(df[target].values).float()
+        self.X = torch.tensor(feature_data).float()
+        self.y = torch.tensor(target_data).float()
 
     def __len__(self):
         '''
@@ -34,3 +42,51 @@ class SeismicDataset(Dataset):
             x = self.X[0:(i + 1), :]
             x = torch.cat((padding, x), 0)
         return x, self.y[i]
+
+####################################################################
+def construct_dataset(features: pd.DataFrame, target_vals: np.ndarray, seq_length: int,
+                      feature_names: List[str], train_frac: float = 0.7,
+                      do_normalize: bool = True):
+    '''
+    Perform train-test split, data normalization, and return transformed feature and target data.
+
+    Parameters:
+    -------------
+    features: pd.DataFrame
+        Feature data
+
+    target_vals: 1D NumPy array
+        Target data
+
+    seq_length: int
+        Input or sequence length to machine learning model
+
+    feature_names: list of strings
+        List of features of interest for modeling
+
+    train_frac: float
+        Fraction of full data to be labeled as training data. The remainder gets marked as test data.
+
+    do_normalize: bool
+        Flag that dictates if data normalization is to be performed
+
+    '''
+    # Size of training data
+    n_train = math.floor(train_frac * len(features))
+    # Train-test split
+    train_x, test_x = features[feature_names].iloc[:n_train], features[feature_names].iloc[n_train:]
+    train_y, test_y = target_vals[:n_train], target_vals[n_train:]
+
+    # Data normalization
+    if do_normalize:
+        train_x, train_y, test_x, test_y, x_scaler, y_scaler = normalize(train_x, train_y, test_x, test_y)
+
+    # Generate data sets.
+    train_dset = LSTMdataset(train_x, train_y, seq_length)
+    test_dset = LSTMdataset(test_x, test_y, seq_length)
+
+    if do_normalize:
+        return train_dset, test_dset, x_scaler, y_scaler
+    else:
+        return train_dset, test_dset
+####################################################################

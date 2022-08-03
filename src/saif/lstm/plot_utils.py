@@ -1,3 +1,4 @@
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -27,7 +28,7 @@ def plot_losscurve(n_epoch, train_loss, test_loss, criterion='MSE', basename='lo
         plt.savefig(basename+format)
     plt.close()
 
-def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, basename, output_formats):
+def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, t0, basename, output_formats):
     '''
     Show train-test split and model predictions on training/test data.
 
@@ -39,15 +40,17 @@ def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, base
     y_test: (1D NumPy array) Values of the target variable covered in test data
     pred_train: (1D NumPy array) Model prediction on training data
     pred_test: (1D NumPy array) Model prediction on test data
+    t0: (float) Start epoch of training data in seconds
     basename: (string) Plot basename including path
     output_formats: (list of strings) Plot output formats
     '''
+    min_date = datetime.fromtimestamp(t0)
     fig = plt.figure()
     plt.plot(x_train, y_train, '-k')
     plt.plot(x_test, y_test, '-r')
     plt.plot(x_train, pred_train, ':k')
     plt.plot(x_test, pred_test, ':r')
-    plt.xlabel('Time (years)', fontsize=14)
+    plt.xlabel('Time (days) since %s'% (min_date.strftime('%Y - %m - %d')), fontsize=14)
     plt.ylabel('Cumulative earthquake count', fontsize=14)
     plt.grid(linestyle=':', alpha=0.7)
     plt.tight_layout()
