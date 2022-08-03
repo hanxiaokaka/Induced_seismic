@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
 from scipy.interpolate import LinearNDInterpolator, RegularGridInterpolator, interp1d
-from orion_light import function_wrappers
+from . import function_wrappers
 
 
 class hdf5_wrapper:

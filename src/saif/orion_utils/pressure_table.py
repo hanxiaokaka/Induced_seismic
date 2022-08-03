@@ -1,7 +1,7 @@
 import numpy as np
 
 # from orion_light import file_io
-from saif.utils import orion_file_io
+from . import orion_file_io
 from scipy import integrate
 
 
