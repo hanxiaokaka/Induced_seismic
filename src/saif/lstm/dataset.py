@@ -2,6 +2,7 @@ import torch, math
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
+from saif.scinet.dataset import TimeSeriesDataset
 from saif.ml_utils.normalization import normalize
 from typing import List, Tuple
 ####################################################################
@@ -19,9 +20,10 @@ class LSTMdataset(Dataset):
         seq_length: int
              Sequence length
         '''
+        self.horizon = 1
         self.seq_length = seq_length
         self.X = torch.tensor(feature_data).float()
-        self.y = torch.tensor(target_data).float()
+        self.Y = torch.tensor(target_data).float()
 
     def __len__(self):
         '''
@@ -35,13 +37,19 @@ class LSTMdataset(Dataset):
         If i is near the beginning of the dataset, we pad by repeating the first row as many times as needed to make the output have seq_length rows.
         '''
         if i >= self.seq_length - 1:
-            i_start = i - self.seq_length + 1
-            x = self.X[i_start:(i + 1), :]
+            x_start = i - self.seq_length + 1
+            x_end = x_start + self.seq_length
+            y_start = x_end
+            y_end = y_start + self.horizon
+            x = self.X[x_start:x_end, :]
+            y = self.Y[y_start:y_end]
         else:
             padding = self.X[0].repeat(self.seq_length - i - 1, 1)
             x = self.X[0:(i + 1), :]
             x = torch.cat((padding, x), 0)
-        return x, self.y[i]
+            y_start = i+1
+            y = self.Y[i+1: i+self.horizon+1]
+        return x, y
 
 ####################################################################
 def construct_dataset(features: pd.DataFrame, target_vals: np.ndarray, seq_length: int,
@@ -81,9 +89,9 @@ def construct_dataset(features: pd.DataFrame, target_vals: np.ndarray, seq_lengt
     if do_normalize:
         train_x, train_y, test_x, test_y, x_scaler, y_scaler = normalize(train_x, train_y, test_x, test_y)
 
-    # Generate data sets.
-    train_dset = LSTMdataset(train_x, train_y, seq_length)
-    test_dset = LSTMdataset(test_x, test_y, seq_length)
+    # Generate data sets. Set horizon length  to 1.
+    train_dset = TimeSeriesDataset(train_x, train_y, seq_length, 1, feature_names)
+    test_dset = TimeSeriesDataset(test_x, test_y, seq_length, 1, feature_names)
 
     if do_normalize:
         return train_dset, test_dset, x_scaler, y_scaler

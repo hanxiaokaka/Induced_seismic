@@ -24,7 +24,7 @@ config = {
 # Features of interest
 'feature_names': ['pressure', 'dpdt'],
 # Fraction of full data kept aside as training data
-'train_frac': 0.8,
+'train_frac': 0.50,
 # Sequence length
 'seq_length': 16,
 # Batch size
@@ -69,8 +69,9 @@ def fit_lstm(config: dict) -> None:
     features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic_df, pressure_df)
     features['cum_counts'] = target_vals
     print('Aggregated pressure and seismic data.')
-    # Pass cumulative counts as input.
-    config['feature_names'].append('cum_counts')
+    # Pass historical target values as input.
+    if 'cum_counts' not in config['feature_names']:
+        config['feature_names'].append('cum_counts')
 
     train_dset, test_dset, x_scaler, y_scaler = construct_dataset(features, target_vals, config['seq_length'],
                                                                   config['feature_names'], config['train_frac'],
@@ -115,17 +116,22 @@ def fit_lstm(config: dict) -> None:
     prediction_train = predict(train_eval_loader, model)
     prediction_test = predict(test_loader, model)
     # Undo normalization.
-    y_train = y_scaler.inverse_transform(train_dset.y.numpy().reshape(-1,1)).flatten()
-    y_test = y_scaler.inverse_transform(test_dset.y.numpy().reshape(-1,1)).flatten()
+    y_train = y_scaler.inverse_transform(train_dset.Y.numpy().reshape(-1,1)).flatten()
+    y_test = y_scaler.inverse_transform(test_dset.Y.numpy().reshape(-1,1)).flatten()
     prediction_train = y_scaler.inverse_transform(prediction_train.numpy().reshape(-1,1)).flatten()
     prediction_test =  y_scaler.inverse_transform(prediction_test.numpy().reshape(-1,1)).flatten()
+    # Pad predictions with NaNs to the size of train and test data.
+    start_pad = np.zeros(config['seq_length'])*np.NaN
+    end_pad = np.zeros(1)*np.NaN # Horizon length = 1
+    prediction_train = np.concatenate((start_pad, prediction_train, end_pad))
+    prediction_test = np.concatenate((start_pad, prediction_test, end_pad))
     print('Computed model prediction on training and test data')
 
     print('Plotting loss curve')
     plot_losscurve(n_epoch, train_loss, test_loss, config['criterion'], config['PLOT_DIR']+'losscurve', config['plot_formats'])
 
     print('Plotting train/test data and model prediction')
-    test_start_idx = len(train_dset.y)
+    test_start_idx = len(train_dset.Y)
     plot_modelpred(features.days[:test_start_idx], y_train, features.days[test_start_idx:], y_test,
                    prediction_train, prediction_test, t0, config['PLOT_DIR']+'prediction', config['plot_formats'])
 

@@ -45,10 +45,10 @@ class ShallowRegLSTM(nn.Module):
 
         _, (hn, _) = self.lstm(x, (h0, c0))
         # Shape of hn = (num_layers, batch size, hidden_size)
-        out = self.linear(hn.permute(1,0,2).flatten(start_dim=1, end_dim=-1)).flatten()
+        out = self.linear(hn.permute(1,0,2).flatten(start_dim=1, end_dim=-1))
         # Enforce monotonicity.
         out = self.monotonic_fn(out)
         # Force initial value of the horizon to be lower bounded by the final value of the input sequence.
         # Assumes the last feature to be the cumulative count of seismic events.
-        out = out.cumsum(-1) + x[:, -1, -1]
+        out += x[:, -1, -1, None]
         return out
