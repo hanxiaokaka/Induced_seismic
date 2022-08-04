@@ -16,15 +16,15 @@ from saif.lstm.plot_utils import plot_losscurve, plot_modelpred
 
 config = {
 # Location tag for plots and directory labels
-'location': 'cushing2014',
+'location': 'decatur',
 # Seismic data
-'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/seismic.csv',
+'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/seismic.csv',
 # Pressure data
-'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/pressure.csv',
+'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/pressure.csv',
 # Features of interest
 'feature_names': ['pressure', 'dpdt'],
 # Fraction of full data kept aside as training data
-'train_frac': 0.50,
+'train_frac': 0.80,
 # Sequence length
 'seq_length': 16,
 # Batch size
