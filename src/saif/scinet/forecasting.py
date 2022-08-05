@@ -234,18 +234,18 @@ class Struct:
 # config = Struct(**make_scinet_config())
 
 
-def saveplot(train_loss_vals,test_loss_vals,save=True,filename='training_curve.csv'):
-    if save:
-        import matplotlib.pyplot as plt
-        train_loss_vals
-        test_loss_vals
-        plt.plot(train_loss_vals, color='g', label='train')
-        plt.plot(test_loss_vals, color='r', label='test')
-        plt.legend()
-        plt.ylabel('Huberloss')
-        # plt.ylim([0,2])
-        plt.yscale('log')
-        plt.xlabel('Epoch')
+def saveplot(train_loss_vals,test_loss_vals,savefile=True,filename='training_curve.csv'):
+    import matplotlib.pyplot as plt
+    train_loss_vals
+    test_loss_vals
+    plt.plot(train_loss_vals, color='g', label='train')
+    plt.plot(test_loss_vals, color='r', label='test')
+    plt.legend()
+    plt.ylabel('Huberloss')
+    # plt.ylim([0,2])
+    plt.yscale('log')
+    plt.xlabel('Epoch')
+    if savefile:
         pd.DataFrame({
             'epoch_number':range(len(train_loss_vals)),
             'train_loss': train_loss_vals,
@@ -348,6 +348,7 @@ def monte_carlo(model,config):
     plt.ylabel('normalized cumulative counts')
     plt.legend(loc='lower right')
     plt.show()
+    plt.close()
 
 def multiple_horizons(model,config,savefile=True,filename='test_pred.csv'): 
     datapath = config.datapath
@@ -403,10 +404,15 @@ def multiple_horizons(model,config,savefile=True,filename='test_pred.csv'):
         predictions.append(_predict.data.squeeze()) # output?
         sample_x = torch.clone(forecast_X[start_input+i*config.horizon:end_input+i*config.horizon])
         sample_x[None,-config.horizon:,-1] = _predict.data.squeeze()
+    plt.figure()
     plt.plot(np.arange(0,len(train_dset.Y)),train_dset.Y,'r',label='observations')
     plt.plot(np.arange(len(train_dset.Y),len(train_dset.Y)+len(torch.cat(predictions))),torch.cat(predictions).squeeze(),'b',label='predictions')
     plt.plot(np.arange(len(train_dset.Y),len(train_dset.Y)+len(output_y)),output_y,'r')
     plt.legend()
+    plt.xlabel('days')
+    plt.ylabel('normalized cumulative counts')
+    plt.show()
+    plt.close()
     if savefile == True:
         pd.DataFrame({
             'days':np.arange(len(train_dset.Y),len(train_dset.Y)+len(output_y)),
