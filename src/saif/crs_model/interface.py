@@ -54,6 +54,7 @@ class CRSInterface():
     def __init__(
             self, site_info, seismic_df, pressure_df,
             train_frac=0.75,
+            do_partition=True,
             signal_to_partition='magnitude', 
             threshold=0.6, min_dist=100,
             optimizer_method='newton-exact',
@@ -74,6 +75,7 @@ class CRSInterface():
         self.model = BatchCRSModel(site_info)
 
         # Params for partitioning
+        self.do_partition = do_partition
         self.signal_to_partition = signal_to_partition
         self.threshold = threshold
         self.min_dist= min_dist
@@ -126,11 +128,14 @@ class CRSInterface():
         return self.data_df.iloc[self.train_cutoff:]
 
     def infer_partition(self):
-        self.pks = pk_indxs(
-            self.train_df[self.signal_to_partition], 
-            trshd=self.threshold, 
-            min_dist=self.min_dist
-        )
+        if self.do_partition:
+            self.pks = pk_indxs(
+                self.train_df[self.signal_to_partition], 
+                trshd=self.threshold, 
+                min_dist=self.min_dist
+            )
+        else:
+            self.pks = np.array([])
 
         all_sections_idx = np.append(self.pks, self.train_cutoff)
         signal_starts, signal_sections = extract_sections(
@@ -189,11 +194,12 @@ class CRSInterface():
 
         fig, axs = plt.subplots(2,1,figsize=(12,8), sharex=True)
         axs[0].plot(self.train_df.days, self.train_df.rate)
-        axs[0].plot(
-            self.train_df.days.values[self.pks], 
-            self.train_df.rate.values[self.pks],
-            'o', color='purple'
-        )
+        if self.do_partition:
+            axs[0].plot(
+                self.train_df.days.values[self.pks], 
+                self.train_df.rate.values[self.pks],
+                'o', color='purple'
+            )
         axs[0].plot(
             self.test_df.days.values, 
             self.test_df.rate.values,
@@ -220,18 +226,19 @@ class CRSInterface():
             )
 
         ylim = axs[1].get_ylim()
-        axs[1].vlines(
-            self.train_df.days.values[self.pks], 
-            ylim[0], ylim[1], color='purple', linestyle='--',
-            label='peaks'
-        )
+        if self.do_partition:
+            axs[1].vlines(
+                self.train_df.days.values[self.pks], 
+                ylim[0], ylim[1], color='purple', linestyle='--',
+                label='peaks'
+            )
         axs[1].set_ylim(ylim)
 
         axs[0].set_ylabel('Empirical rate')
-
-        axs[1].set_ylabel('Empirical rate')
+        axs[1].set_ylabel('Cumulative counts')
         axs[1].set_xlabel('Days')
 
+        axs[1].plot([], [], color='g', label='forecast')
         axs[1].legend(loc='upper left')
 
         plt.show()
