@@ -3,7 +3,7 @@ import json
 
 import numpy as np
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
@@ -428,6 +428,6 @@ if __name__ == "__main__":
     config.dropout = 0.8
     config.num_levels=3
     train_loss_vals, test_loss_vals, model = run_exp(config=config)
-    saveplot(train_loss_vals,test_loss_vals,save=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_training_curve.csv')
+    saveplot(train_loss_vals,test_loss_vals,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_training_curve.csv')
     multiple_horizons(model,config,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_test_pred.csv'
 )
