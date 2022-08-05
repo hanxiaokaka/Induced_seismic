@@ -1,4 +1,6 @@
 import torch
+from torch import nn
+from saif.scinet.dataset import TimeSeriesDataset
 ####################################################################
 def train_model(data_loader, model, loss_function, optimizer):
     '''
@@ -66,5 +68,46 @@ def predict(data_loader, model):
             y_star = model(X)
             output = torch.cat((output, y_star), 0)
     return output
+####################################################################
+def unroll_forecast(model: nn.Module, train_dset: TimeSeriesDataset, test_dset: TimeSeriesDataset, seq_length: int) -> torch.tensor:
+    '''
+    Unroll model forecast over x-ranges of test data. Presumes a horizon length of 1 sample.
+    Also, assumes that the last column in train_dset.X and test_dset.X stores historical values of the target variable.
 
+    Parameters:
+    -------------
+    model: nn.Module (or PyTorch model)
+        PyTorch machine learning model
+
+    train_dset: TimeSeriesDataset object
+        Training data
+
+    test_dset: TimeSeriesDataset object
+        Test data
+
+    seq_length: int
+        Sequence length
+
+    Returns:
+    -------------
+    forecast_y: torch.tensor
+        Unrolled model forecast over x-ranges of test data
+    '''
+    model.eval()
+    forecast_X = torch.cat((torch.clone(train_dset.X[-seq_length:]),torch.clone(test_dset.X)))
+    sample_x = torch.clone(train_dset.X[-seq_length:])
+    # Shape of sample_x = (Sequence length, N_features)
+    # sample_x[:, -1] is the historical output time series.
+    forecast_y = torch.tensor([])
+    with torch.no_grad():
+        # Loop over number of forecast horizons.
+        for i in range(len(test_dset.Y)):
+            print('Iteration %d'% (i+1))
+            y_star = model(sample_x[None,:,:])
+            print(sample_x, y_star)
+            forecast_y = torch.cat((forecast_y, y_star))
+            forecast_X[seq_length+i,-1] = y_star
+            # Move sample_x window forward alone forecast_X by horizon length.
+            sample_x = torch.clone(forecast_X[i+1:i+1+seq_length])
+    return forecast_y
 ####################################################################

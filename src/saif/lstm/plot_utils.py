@@ -28,7 +28,7 @@ def plot_losscurve(n_epoch, train_loss, test_loss, criterion='MSE', basename='lo
         plt.savefig(basename+format)
     plt.close()
 
-def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, t0, basename, output_formats):
+def plot_modelpred(x_train, y_train, x_test, y_test, pred_test, t0, basename, output_formats):
     '''
     Show train-test split and model predictions on training/test data.
 
@@ -38,7 +38,6 @@ def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, t0, 
     y_train: (1D NumPy array) Values of the target variable covered in training data
     x_test: (1D NumPy array) Values of the independent variable covered in test data
     y_test: (1D NumPy array) Values of the target variable covered in test data
-    pred_train: (1D NumPy array) Model prediction on training data
     pred_test: (1D NumPy array) Model prediction on test data
     t0: (float) Start epoch of training data in seconds
     basename: (string) Plot basename including path
@@ -46,12 +45,14 @@ def plot_modelpred(x_train, y_train, x_test, y_test, pred_train, pred_test, t0, 
     '''
     min_date = datetime.fromtimestamp(t0)
     fig = plt.figure()
-    plt.plot(x_train, y_train, '-k')
-    plt.plot(x_test, y_test, '-r')
-    plt.plot(x_train, pred_train, ':k')
-    plt.plot(x_test, pred_test, ':r')
+    line1, = plt.plot(x_train, y_train, '-k')
+    line2, = plt.plot(x_test, y_test, '-r')
+    line3, = plt.plot(x_test, pred_test, ':r')
     plt.xlabel('Time (days) since %s'% (min_date.strftime('%Y - %m - %d')), fontsize=14)
     plt.ylabel('Cumulative earthquake count', fontsize=14)
+    first_legend = plt.legend(handles=[line1, line2], labels=['Training data', 'Test data'], loc='upper left', prop={'size':12})
+    plt.gca().add_artist(first_legend)
+    second_legend = plt.legend(handles=[line2, line3], labels=['Data', 'Forecast'], loc='lower right', prop={'size':12})
     plt.grid(linestyle=':', alpha=0.7)
     plt.tight_layout()
     for format in output_formats:

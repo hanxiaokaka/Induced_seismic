@@ -9,22 +9,22 @@ from torch.utils.data import DataLoader
 from saif.ml_utils.data_utils import daily_seismic_and_interpolated_pressure
 from saif.lstm.dataset import construct_dataset
 from saif.lstm.model import ShallowRegLSTM
-from saif.lstm.train_utils import train_model, test_model, predict
+from saif.lstm.train_utils import train_model, test_model, unroll_forecast
 from saif.lstm.plot_utils import plot_losscurve, plot_modelpred
 ####################################################################
 # INPUTS
 
 config = {
 # Location tag for plots and directory labels
-'location': 'decatur',
+'location': 'cushing2014',
 # Seismic data
-'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/seismic.csv',
+'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/seismic.csv',
 # Pressure data
-'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/pressure.csv',
+'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/pressure.csv',
 # Features of interest
 'feature_names': ['pressure', 'dpdt'],
 # Fraction of full data kept aside as training data
-'train_frac': 0.80,
+'train_frac': 0.665,
 # Sequence length
 'seq_length': 16,
 # Batch size
@@ -36,7 +36,7 @@ config = {
 # Dropout probability
 'dropout': 0.0,
 # Monotonic activation function
-'monotonic_fn': lambda x: x,
+'monotonic_fn': lambda x : x ** 2,
 # Learning rate
 'lr': 1.0e-5,
 # Loss criterion
@@ -111,20 +111,12 @@ def fit_lstm(config: dict) -> None:
     # Load parameter values from epoch of robust fit.
     model.load_state_dict(torch.load(config['PARAMS_DIR']+'epoch%d.h5'% (idx_robustfit+1)))
 
-    # Obtain model prediction on test data.
-    train_eval_loader = DataLoader(train_dset, batch_size=config['batch_size'], shuffle=False)
-    prediction_train = predict(train_eval_loader, model)
-    prediction_test = predict(test_loader, model)
+    # Obtain unrolled model forecast on test data.
+    forecast_test = unroll_forecast(model, train_dset, test_dset, config['seq_length'])
     # Undo normalization.
-    y_train = y_scaler.inverse_transform(train_dset.Y.numpy().reshape(-1,1)).flatten()
-    y_test = y_scaler.inverse_transform(test_dset.Y.numpy().reshape(-1,1)).flatten()
-    prediction_train = y_scaler.inverse_transform(prediction_train.numpy().reshape(-1,1)).flatten()
-    prediction_test =  y_scaler.inverse_transform(prediction_test.numpy().reshape(-1,1)).flatten()
-    # Pad predictions with NaNs to the size of train and test data.
-    start_pad = np.zeros(config['seq_length'])*np.NaN
-    end_pad = np.zeros(1)*np.NaN # Horizon length = 1
-    prediction_train = np.concatenate((start_pad, prediction_train, end_pad))
-    prediction_test = np.concatenate((start_pad, prediction_test, end_pad))
+    y_train = y_scaler.inverse_transform(train_dset.Y.numpy().reshape(-1,1)).squeeze()
+    y_test = y_scaler.inverse_transform(test_dset.Y.numpy().reshape(-1,1)).squeeze()
+    forecast_test = y_scaler.inverse_transform(forecast_test.numpy()).squeeze()
     print('Computed model prediction on training and test data')
 
     print('Plotting loss curve')
@@ -133,7 +125,7 @@ def fit_lstm(config: dict) -> None:
     print('Plotting train/test data and model prediction')
     test_start_idx = len(train_dset.Y)
     plot_modelpred(features.days[:test_start_idx], y_train, features.days[test_start_idx:], y_test,
-                   prediction_train, prediction_test, t0, config['PLOT_DIR']+'prediction', config['plot_formats'])
+                   forecast_test, t0, config['PLOT_DIR']+'prediction', config['plot_formats'])
 
     # Save loss curve data to file.
     losscurve_df = pd.DataFrame({'epoch':n_epoch, 'train_loss':train_loss, 'test_loss':test_loss})
@@ -141,16 +133,15 @@ def fit_lstm(config: dict) -> None:
     print('Loss curve data written to file.')
 
     # Save model predictions on training data to file.
-    pred_test_df = pd.DataFrame({'days': features.days[:test_start_idx].values, 'y_train': y_train,
-                                 'prediction': prediction_train})
+    pred_test_df = pd.DataFrame({'days': features.days[:test_start_idx].values, 'y_train': y_train})
     pred_test_df.to_csv(config['PARAMS_DIR']+'train_pred.csv', index=None)
-    print('Model predictions on training data written to file.')
+    print('Training data written to file.')
 
     # Save model predictions on test data to file.
     pred_test_df = pd.DataFrame({'days': features.days[test_start_idx:].values, 'y_test': y_test,
-                                 'prediction':prediction_test})
+                                 'prediction':forecast_test})
     pred_test_df.to_csv(config['PARAMS_DIR']+'/test_pred.csv', index=None)
-    print('Model predictions on test data written to file.')
+    print('Test data and model predictions on test data written to file.')
 
 ####################################################################
 if __name__ == "__main__":
