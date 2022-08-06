@@ -21,10 +21,14 @@ config = {
 'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/seismic.csv',
 # Pressure data
 'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/pressure.csv',
-# Features of interest
+# Independent variables of interest
 'feature_names': ['pressure', 'dpdt'],
+# PyTorch manual seed
+'seed': 0,
 # Fraction of full data kept aside as training data
-'train_frac': 0.665,
+'train_frac': 0.64,
+# Fraction of full data set aside as validation data
+'val_frac': 0.195,
 # Sequence length
 'seq_length': 16,
 # Batch size
@@ -36,7 +40,7 @@ config = {
 # Dropout probability
 'dropout': 0.0,
 # Monotonic activation function
-'monotonic_fn': lambda x : x ** 2,
+'monotonic_fn': F.relu,
 # Learning rate
 'lr': 1.0e-5,
 # Loss criterion
@@ -53,6 +57,7 @@ config = {
 }
 ####################################################################
 def fit_lstm(config: dict) -> None:
+    torch.manual_seed(config['seed'])
     # Read in data.
     seismic_df = pd.read_csv(config['seismic_csv'])
     pressure_df = pd.read_csv(config['pressure_csv'])

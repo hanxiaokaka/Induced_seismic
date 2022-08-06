@@ -20,8 +20,8 @@ _FUNCS = {
     'abs' : lambda x : x.abs(),
     'quad' : lambda x : x ** 2,
     'relu' : F.relu,
+    'sigmoid': torch.sigmoid,
     'exp' : torch.exp,
-    'sigmoid' : torch.sigmoid,
     'identity' : lambda x : x
 }
 
