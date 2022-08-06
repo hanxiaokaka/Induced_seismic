@@ -102,9 +102,7 @@ def unroll_forecast(model: nn.Module, train_dset: TimeSeriesDataset, test_dset: 
     with torch.no_grad():
         # Loop over number of forecast horizons.
         for i in range(len(test_dset.Y)):
-            print('Iteration %d'% (i+1))
             y_star = model(sample_x[None,:,:])
-            print(sample_x, y_star)
             forecast_y = torch.cat((forecast_y, y_star))
             forecast_X[seq_length+i,-1] = y_star
             # Move sample_x window forward alone forecast_X by horizon length.
