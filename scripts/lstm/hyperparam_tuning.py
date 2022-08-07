@@ -99,7 +99,7 @@ def run_exp(config=None):
             train_loss = train_step(device, criterion, model, optimizer, train_loader)
             val_loss = test_step(device, criterion, model, val_loader)
             # Unroll forecast on validation data.
-            valtrain_forecast = unroll_forecast(model, train_dset, val_dset, config['seq_length'])
+            valtrain_forecast = unroll_forecast(model, train_dset, val_dset, config.input_len)
             # Loss between direct forecast and unbatched validation data
             val_dms_loss = criterion(valtrain_forecast.squeeze(), val_dset.Y)
             wandb.log({"epoch": epoch, 'train_loss' : train_loss, "val_loss": val_loss, "val_dms_loss": val_dms_loss})
