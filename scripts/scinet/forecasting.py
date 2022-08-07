@@ -9,9 +9,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.data import DataLoader
 
-from saif.scinet.dataset import daily_seismic_and_interpolated_pressure
+from saif.ml_utils.data_utils import daily_seismic_and_interpolated_pressure
 from saif.scinet.dataset import construct_time_series_dataset
 import saif.scinet.model as scinet
 
@@ -101,7 +100,9 @@ def load_data(config):
     seismic = pd.read_csv(os.path.join(datapath, 'seismic.csv'))
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
-    features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    target_vals = features.target
 
     if config.feature_set == 'full':
         feature_names = features.columns
