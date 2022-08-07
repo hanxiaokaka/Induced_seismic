@@ -16,11 +16,11 @@ from saif.lstm.plot_utils import plot_losscurve, plot_modelpred
 
 config = {
 # Location tag for plots and directory labels
-'location': 'decatur',
+'location': 'cushing2014',
 # Seismic data
-'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/seismic.csv',
+'seismic_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/seismic.csv',
 # Pressure data
-'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/decatur_illinois/pressure.csv',
+'pressure_csv': 'gs://us-geomechanicsforco2-dev-staging/temporal_datasets/cushing_2014_oklahoma/pressure.csv',
 # Independent variables of interest
 'feature_names': ['pressure', 'dpdt'],
 # PyTorch manual seed
@@ -40,14 +40,14 @@ config = {
 # Dropout probability
 'dropout': 0.0,
 # Monotonic activation function
-'monotonic_fn': F.relu,
+'monotonic_fn': lambda x: x.abs(),
 # Learning rate
 'lr': 1.0e-5,
 # Loss criterion
 'criterion': 'Huber', # Label for plotting
 'loss_function': nn.HuberLoss(),
 # Max no. of epochs of training
-'max_epoch': 500,
+'max_epoch': 1000,
 # Path to save model parameters at each epoch of training
 'PARAMS_DIR': '../../data/06_models/lstm/',
 # Path to plots

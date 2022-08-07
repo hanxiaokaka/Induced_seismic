@@ -1,6 +1,5 @@
 # Hyperparameter tuning for LSTM model
 import os
-import json
 import numpy as np
 import pandas as pd
 import torch
@@ -11,8 +10,7 @@ from torch.utils.data import DataLoader
 from saif.ml_utils.data_utils import daily_seismic_and_interpolated_pressure
 from saif.lstm.dataset import construct_dataset
 from saif.lstm.model import ShallowRegLSTM
-from saif.lstm.train_utils import train_model, test_model, predict
-from saif.lstm.plot_utils import plot_losscurve, plot_modelpred
+from saif.lstm.train_utils import unroll_forecast
 import wandb
 
 # Monotonic activation functions
@@ -39,13 +37,14 @@ def load_data(config):
     else:
         feature_names = ['seismic']
     N_features = len(feature_names)
-    train_dset, test_dset, x_scaler, y_scaler = construct_dataset(features, target_vals, config.input_len, feature_names,
-                                                                  config.train_test_split, do_normalize=True)
+    train_dset, val_dset, test_dset, x_scaler, y_scaler = construct_dataset(features, target_vals, config.input_len, feature_names,
+                                                                            config.train_frac, config.val_frac, do_normalize=True)
+
     # Initialize data loaders.
     train_loader = DataLoader(train_dset, config.batch_size, shuffle=True, num_workers=1)
-    test_loader = DataLoader(test_dset, config.batch_size, shuffle=False, num_workers=1)
+    val_loader = DataLoader(val_dset, config.batch_size, shuffle=True, num_workers=1)
 
-    return N_features, train_loader, test_loader
+    return N_features, train_dset, train_loader, val_dset, val_loader
 
 def build_model(N_features, config):
     _func = _FUNCS.get(config.monotonic_activation)
@@ -89,7 +88,7 @@ def run_exp(config=None):
             device = 'cpu'
 
         torch.manual_seed(config.seed)
-        N_features, train_loader, test_loader = load_data(config)
+        N_features, train_dset, train_loader, val_dset, val_loader = load_data(config)
         model = build_model(N_features, config)
         model = model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=config.lr)
@@ -98,8 +97,12 @@ def run_exp(config=None):
         wandb.watch(model)
         for epoch in range(config.n_epoch):
             train_loss = train_step(device, criterion, model, optimizer, train_loader)
-            test_loss = test_step(device, criterion, model, test_loader)
-            wandb.log({"epoch": epoch, 'train_loss' : train_loss, "test_loss": test_loss})
+            val_loss = test_step(device, criterion, model, val_loader)
+            # Unroll forecast on validation data.
+            valtrain_forecast = unroll_forecast(model, train_dset, val_dset, config['seq_length'])
+            # Loss between direct forecast and unbatched validation data
+            val_dms_loss = criterion(valtrain_forecast.squeeze(), val_dset.Y))
+            wandb.log({"epoch": epoch, 'train_loss' : train_loss, "val_loss": val_loss, "val_dms_loss": val_dms_loss})
 
 def default_val(name, vals):
     if isinstance(vals, list):
@@ -121,28 +124,31 @@ def make_param_dict():
         default_val('feature_set', ['full', 'injection', 'seismic'])
     )
     parameters_dict.update(
-        default_val('input_len', [4, 8, 16, 32, 64])
+        default_val('input_len', [8, 16, 32])
     )
     parameters_dict.update(
-        default_val('train_test_split', 0.8)
+        default_val('train_frac', 0.64)
     )
     parameters_dict.update(
-        default_val('batch_size', [16, 32, 64])
+        default_val('val_frac', 0.195)
+    )
+    parameters_dict.update(
+        default_val('batch_size', [16, 32])
     )
     parameters_dict.update(
         default_val('num_layers', [1, 2, 3])
     )
     parameters_dict.update(
-        default_val('dropout', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
+        default_val('dropout', [0.0, 0.2, 0.4, 0.5])
     )
     parameters_dict.update(
-        default_val('hidden_size', [4, 8, 16, 32, 64])
+        default_val('hidden_size', [8, 16, 32])
     )
     parameters_dict.update(
         default_val('monotonic_activation', list(_FUNCS.keys()))
     )
     parameters_dict.update(
-        default_val('lr', [1e-5, 5e-5, 1e-4, 5e-4, 1e-3])
+        default_val('lr', [1e-5, 5e-5, 1e-4])
     )
     parameters_dict.update(
         default_val('n_epoch', 512)
@@ -151,7 +157,7 @@ def make_param_dict():
 
 def make_config():
     sweep_config = {'method': 'bayes'}
-    metric = {'name': 'test_loss',
+    metric = {'name': 'val_dms_loss',
               'goal': 'minimize'}
     sweep_config['metric'] = metric
     sweep_config['parameters'] = make_param_dict()
@@ -162,8 +168,8 @@ if __name__ == "__main__":
     sweep_config = make_config()
     sweep_id = wandb.sweep(
         sweep_config,
-        project="lstm-tuning-v1",
+        project="lstm-tuning-val",
         entity="fdl2022_team_geomechanics-for-co2-sequestration"
     )
     print("sweep_id:", sweep_id)
-    wandb.agent(sweep_id, function=run_exp, count=100)
+    wandb.agent(sweep_id, function=run_exp)
