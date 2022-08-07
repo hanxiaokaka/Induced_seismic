@@ -11,6 +11,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+from torch.utils.data import DataLoader
+
 
 from saif.scinet.dataset import daily_seismic_and_interpolated_pressure
 from saif.scinet.dataset import construct_time_series_dataset
