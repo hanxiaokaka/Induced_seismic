@@ -255,6 +255,24 @@ def saveplot(train_loss_vals,test_loss_vals,savefile=True,filename='training_cur
             'test_loss':test_loss_vals
         }).to_csv(filename,index=False)
 
+def monte_carlo_sample(model, x, n_samples=50, seed=0):
+    torch.manual_seed(seed)
+    model.train()
+    # We want the model to be in training mode
+    # Except for the BN.
+    # There is potentially a more elegant way to do this
+    # Ex by making a different "mode" in our own model groups
+    model.bn1.training = False
+    model.bn2.training = False
+    
+    samples = []
+    for _ in range(n_samples):
+        samples.append(model(x).data)
+    samples = torch.stack(samples)
+    
+    model.eval()
+    return samples.permute(1, 0, 2)
+
 def monte_carlo(model,config):
     datapath = config.datapath
         
@@ -301,24 +319,6 @@ def monte_carlo(model,config):
     sample_x = torch.clone(test_dset.X[start_input:end_input])
     input_y = torch.clone(test_dset.Y[start_input:end_input+1])
     output_y = torch.clone(test_dset.Y[end_input:end_output])
-
-    def monte_carlo_sample(model, x, n_samples=50, seed=0):
-        torch.manual_seed(seed)
-        model.train()
-        # We want the model to be in training mode
-        # Except for the BN.
-        # There is potentially a more elegant way to do this
-        # Ex by making a different "mode" in our own model groups
-        model.bn1.training = False
-        model.bn2.training = False
-        
-        samples = []
-        for _ in range(n_samples):
-            samples.append(model(x).data)
-        samples = torch.stack(samples)
-        
-        model.eval()
-        return samples.permute(1, 0, 2)
 
     model.eval()
     pred_y = model(sample_x[None, :, :]).squeeze(0).data
