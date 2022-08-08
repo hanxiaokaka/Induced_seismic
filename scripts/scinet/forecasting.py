@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import os
 import json
 
@@ -509,4 +507,3 @@ if __name__ == "__main__":
     saveplot(train_loss_vals,test_loss_vals,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_training_curve.csv')
     multiple_horizons(model,config,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_test_pred.csv'
 )
->>>>>>> 8e8f0a2 (switch to use daily_seismic_and_interpolated_pressure function from)
