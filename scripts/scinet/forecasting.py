@@ -105,8 +105,8 @@ def load_data(config):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    target_vals = features.target
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -257,6 +257,24 @@ def saveplot(train_loss_vals,test_loss_vals,savefile=True,filename='training_cur
             'test_loss':test_loss_vals
         }).to_csv(filename,index=False)
 
+def monte_carlo_sample(model, x, n_samples=50, seed=0):
+    torch.manual_seed(seed)
+    model.train()
+    # We want the model to be in training mode
+    # Except for the BN.
+    # There is potentially a more elegant way to do this
+    # Ex by making a different "mode" in our own model groups
+    model.bn1.training = False
+    model.bn2.training = False
+    
+    samples = []
+    for _ in range(n_samples):
+        samples.append(model(x).data)
+    samples = torch.stack(samples)
+    
+    model.eval()
+    return samples.permute(1, 0, 2)
+
 def monte_carlo(model,config):
     datapath = config.datapath
         
@@ -304,24 +322,6 @@ def monte_carlo(model,config):
     input_y = torch.clone(test_dset.Y[start_input:end_input+1])
     output_y = torch.clone(test_dset.Y[end_input:end_output])
 
-    def monte_carlo_sample(model, x, n_samples=50, seed=0):
-        torch.manual_seed(seed)
-        model.train()
-        # We want the model to be in training mode
-        # Except for the BN.
-        # There is potentially a more elegant way to do this
-        # Ex by making a different "mode" in our own model groups
-        model.bn1.training = False
-        model.bn2.training = False
-        
-        samples = []
-        for _ in range(n_samples):
-            samples.append(model(x).data)
-        samples = torch.stack(samples)
-        
-        model.eval()
-        return samples.permute(1, 0, 2)
-
     model.eval()
     pred_y = model(sample_x[None, :, :]).squeeze(0).data
 
@@ -365,9 +365,8 @@ def multiple_horizons(model,config,savefile=True,filename='test_pred.csv'):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features['seismic'] = features.target
-    target_vals = features.seismic
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -440,9 +439,8 @@ def multiple_horizons_unrolling_one(model,config,savefile=True,filename='test_pr
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features['seismic'] = features.target
-    target_vals = features.seismic
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
