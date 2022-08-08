@@ -253,7 +253,7 @@ def make_param_dict():
         default_val('hidden_size', [1, 2, 3])
     )
     parameters_dict.update(
-        default_val('monotonic_activation', _FUNCS['quad'])
+        default_val('monotonic_activation', ['quad'])
     )
     parameters_dict.update(
         default_val('lr', 1e-3)
