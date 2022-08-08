@@ -108,6 +108,7 @@ def construct_time_series_dataset(
         input_len, horizon, feature_names, 
         train_test_split=0.7, normalize_data=True
     ):
+    features = features[feature_names] # potential fix
     n_train = math.floor(train_test_split * len(features))
 
     train_x, test_x = features.values[:n_train], features.values[n_train:]
