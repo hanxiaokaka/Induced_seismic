@@ -430,6 +430,75 @@ def multiple_horizons(model,config,savefile=True,filename='test_pred.csv'):
         }).to_csv(filename,index=False)
 
     
+def multiple_horizons_unrolling_one(model,config,savefile=True,filename='test_pred.csv'): 
+    # This function does unrolling one forecast at a time
+    datapath = config.datapath
+        
+    seismic = pd.read_csv(os.path.join(datapath, 'seismic.csv'))
+    pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
+
+    # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = features.target
+    target_vals = features.seismic
+
+    if config.feature_set == 'full':
+        feature_names = features.columns
+    elif config.feature_set == 'injection':
+        feature_names = ['pressure','dpdt','seismic']
+    else:
+        feature_names = ['seismic']
+
+    train_dset, test_dset, _, _ = construct_time_series_dataset(
+        features, target_vals, 
+        config.input_len, config.horizon, feature_names, 
+        train_test_split=config.train_test_split, normalize_data=True
+    )
+
+    train_loader = DataLoader(
+        train_dset,
+        batch_size=config.batch_size,
+        shuffle=True,
+        num_workers=1
+    )
+
+    test_loader = DataLoader(
+        test_dset,
+        batch_size=config.batch_size,
+        shuffle=False,
+        num_workers=1
+    )
+    
+    start_input = 0
+    # n_horizons_forcast = len(test_dset.Y) // config.horizon + 1
+    end_input = start_input + config.input_len
+    sample_x = torch.clone(train_dset.X[-config.input_len:])
+    input_y = torch.clone(train_dset.Y[-config.input_len:])
+    forecast_X = torch.cat((torch.clone(train_dset.X[-config.input_len:]),torch.clone(test_dset.X)))
+    output_y = torch.clone(test_dset.Y[:-1])
+
+    torch.manual_seed(0)
+    model.eval()
+    predictions = []
+    outputs_y = []
+    sample_x = torch.clone(forecast_X[start_input:end_input])
+    # for i in range(n_horizons_forcast):
+    for i in range(len(test_dset.Y)):
+        _predict = model(sample_x[None,:,:])
+        predictions.append(_predict.data.squeeze()[0]) # output?
+        # sample_x = torch.clone(forecast_X[start_input+i*config.horizon:end_input+i*config.horizon])
+        # sample_x[None,-config.horizon:,-1] = _predict.data.squeeze()
+        sample_x = torch.clone(forecast_X[start_input+i+1:end_input+i+1])
+        sample_x[None,-1,-1] = _predict.data.squeeze()[0]
+    plt.figure()
+    plt.plot(np.arange(0,len(train_dset.Y)),train_dset.Y,'r',label='observations')
+    plt.plot(np.arange(len(train_dset.Y),len(train_dset.Y)+len(torch.stack(predictions))),torch.stack(predictions).squeeze(),'b',label='predictions')
+    plt.plot(np.arange(len(train_dset.Y),len(train_dset.Y)+len(output_y)),output_y,'r')
+    plt.legend()
+    plt.xlabel('days')
+    plt.ylabel('normalized cumulative counts')
+    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":
