@@ -103,8 +103,8 @@ def load_data(config):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    target_vals = features.target
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -262,9 +262,8 @@ def monte_carlo(model,config):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features['seismic'] = features.target
-    target_vals = features.seismic
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -363,9 +362,8 @@ def multiple_horizons(model,config,savefile=True,filename='test_pred.csv'):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features['seismic'] = features.target
-    target_vals = features.seismic
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -438,9 +436,8 @@ def multiple_horizons_unrolling_one(model,config,savefile=True,filename='test_pr
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features['seismic'] = features.target
-    target_vals = features.seismic
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
@@ -507,5 +504,4 @@ if __name__ == "__main__":
     config.num_levels=3
     train_loss_vals, test_loss_vals, model = run_exp(config=config)
     saveplot(train_loss_vals,test_loss_vals,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_training_curve.csv')
-    multiple_horizons(model,config,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_test_pred.csv'
-)
+    multiple_horizons(model,config,savefile=True,filename=config.datapath.split('/')[-3]+'_'+config.datapath.split('/')[-2] + '_test_pred.csv')
