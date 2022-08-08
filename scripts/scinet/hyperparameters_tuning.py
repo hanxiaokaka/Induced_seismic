@@ -102,8 +102,8 @@ def load_data(config):
     pressure = pd.read_csv(os.path.join(datapath, 'pressure.csv'))
 
     # features, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    features, t0 = daily_seismic_and_interpolated_pressure(seismic, pressure)
-    target_vals = features.target
+    features, t0, target_vals = daily_seismic_and_interpolated_pressure(seismic, pressure)
+    features['seismic'] = target_vals
 
     if config.feature_set == 'full':
         feature_names = features.columns
