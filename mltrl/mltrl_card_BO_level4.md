@@ -1,7 +1,7 @@
 # MLTRL Card example - Seismic Analysis for Induced Forecasts  - level 8
 | Summary info        | Content, links       |
 | -------------------------- | ------------- |
-| Tech name (project ID)  | Mixed-variable BO (R02.1)[^1]   |
+| Tech name (project ID)  | Seismic Analysis for Induced Forecasts   |
 | Current Level           | 4 (*link to prior level cards*) |
 | Owner(s)                | Giuseppe Castiglione, Alexandre Chen, Akshay Suresh, Han Xiao, Kayla Kroll, Christopher Sherman, Constantin Weisser|
 | Reviewer(s)             |                           |
@@ -14,18 +14,18 @@
 
 [^1]: Note the ID convention shown is arbitrary — we use `R` for research, `02` for some index on the team's projects, and `1` for a version of the project.
 
-**TL;DR** — MVBO is a novel Bayesian optimization (BO) algorithm for the efficient optimization of mixed-variable functions (which may represent a real-world system, data-driven model, or other parameterized process).
-
+Seismic Analysis for Induced Forecasts
 
 ### Top-level requirements
 
-*link to full R&D requirements doc (there is not yet a product req's doc)*
+1. The CRS model shall run efficiently and reliably as a module in the broader industrial control system.
+2. The optimization module shall continuously validate and deploy both production and shadow instances.
+3. The CRS algorithm and broader optimization module shall test for, be robust against, and log and shifts in data, environment, or other operations.
+4. The control system optimzation scheme shall be resilient to faults and intrusions (internally and externally).
+5. The optimization module shall have a total runtime less than 5% of the end-to-end control software pipeline.
+6. The optimization module shall have a fallback/bypass mode in case of unforseen failure.
 
-1. The algorithm shall jointly optimize discrete and continuous variables.
-2. The BO approach shall be useful for hyperparameter optimization of data-driven models.
-3. The BO approach shall effectively model and tune mechanistic equations (of physical systems).
-4. The algorithm shall have a total runtime at least 1-2 order of magnitude faster than the end-to-end system/function.
-5. The method shall be transparent to surface info such as quantified uncertainties, bounds, etc.
+
 
 **Extra notes**: Req's are intentionally succinct and specific to the mixed-variable alg variant we're developing, ignoring generic BO items that are well-studied/validated.
 
