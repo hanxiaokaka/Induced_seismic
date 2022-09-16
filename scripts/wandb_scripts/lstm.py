@@ -1,5 +1,7 @@
 import os
 import json
+import sys
+import traceback
 
 import numpy as np
 import pandas as pd
@@ -14,10 +16,11 @@ from sklearn.preprocessing import MinMaxScaler
 
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.callbacks import ModelCheckpoint
 
-from saif.scinet.dataset import daily_seismic_and_interpolated_pressure
-from saif.lstm.pl_lstm import SeismicDataModule, RNNForecaster, RNN_MODULES
-from saif.ml_utils import MONOTONIC_FUNCS
+from saif.ml_utils.data_utils import daily_seismic_and_interpolated_pressure
+from saif.lstm.pl_lstm import SeismicDataModule, RNNForecaster
+from saif.ml_utils.activations import MONOTONIC_FUNCS
 
 import wandb
 
@@ -84,21 +87,33 @@ def run_exp(config=None):
         config = wandb.config
         seed_everything(config.seed)
 
-        data_module = load_data(config)
-        input_dim = data_module.Xt.shape[-1]
-        model = build_model(input_dim, config)
+        try:
+            data_module = load_data(config)
+            input_dim = data_module.Xt.shape[-1]
+            model = build_model(input_dim, config)
 
-        wandb_logger = WandbLogger()
-        wandb_logger.watch(model, log="all")
-        trainer = Trainer(
-            max_epochs=config.max_epochs,
-            logger=wandb_logger,
-            log_every_n_steps=1,
-            accelerator='gpu', 
-            devices=1
-        )
+            wandb_logger = WandbLogger(log_model='all')
+            checkpoint_callback = ModelCheckpoint(
+                monitor="val_loss", mode="min", dirpath=wandb.run.dir
+            )
 
-        trainer.fit(model, data_module)
+            trainer = Trainer(
+                max_epochs=config.max_epochs,
+                logger=wandb_logger,
+                log_every_n_steps=1,
+                accelerator='gpu', 
+                devices=1,
+                callbacks=[checkpoint_callback],
+                enable_checkpointing=True
+            )
+
+            trainer.fit(model, data_module)
+            trainer.test(model, data_module)
+        except Exception as e:
+            # exit gracefully, so wandb logs the problem
+            print(traceback.print_exc(), file=sys.stderr)
+            exit(1)
+
 
 def default_val(name, vals):
     if isinstance(vals, list):
@@ -126,7 +141,7 @@ def make_param_dict():
         default_val('dropout', [0.1, 0.2, 0.3, 0.4, 0.5])
     )
     parameters_dict.update(
-        default_val('num_layers', [1, 2, 3, 4])
+        default_val('num_layers', [1, 2, 3])
     )
     parameters_dict.update(
         default_val('rnn_type', ['rnn', 'lstm'])
@@ -135,7 +150,7 @@ def make_param_dict():
         default_val('monotonic_fn', list(MONOTONIC_FUNCS.keys()))
     )
     parameters_dict.update(
-        default_val('max_epoch', 500)
+        default_val('max_epochs', 500)
     )
     parameters_dict.update(
         default_val('train_frac', 0.7)
@@ -171,7 +186,7 @@ def make_config():
             'distribution': 'q_uniform',
             'q' : 1,
             'min': 1,
-            'max': 1024,
+            'max': 512,
         }
     })
 
@@ -187,6 +202,5 @@ if __name__ == "__main__":
         entity="fdl2022_team_geomechanics-for-co2-sequestration"
     )
     print("sweep_id:", sweep_id)
-    wandb.agent(sweep_id, function=run_exp, count=150)
-
+    wandb.agent(sweep_id, function=run_exp, count=50)
     
