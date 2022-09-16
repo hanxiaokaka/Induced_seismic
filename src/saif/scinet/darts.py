@@ -16,15 +16,8 @@ import saif.scinet.model as scinet
 
 logger = get_logger(__name__)
 
-_FUNCS = {
-    'abs' : lambda x : x.abs(),
-    'quad' : lambda x : x ** 2,
-    'relu' : F.relu,
-    'exp' : torch.exp,
-    'sigmoid' : torch.sigmoid,
-    'no_func' : lambda x : x,
+from saif.ml_utils.activations import MONOTONIC_FUNCS as mfuncs
 
-}
 
 class _SCINetModule(PLPastCovariatesModule):
     def __init__(

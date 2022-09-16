@@ -84,6 +84,7 @@ class RNNForecaster(pl.LightningModule):
         self.criterion = criterion
         self.learning_rate = learning_rate
         self.monotonic_fn = monotonic_fn
+        self.use_bias = use_bias
         self.activation = mfuncs.get(monotonic_fn, lambda x : x)
 
         self.rnn = RNN_MODULES.get(rnn_type)(
